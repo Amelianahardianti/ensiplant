@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "849667863089",
+    "project_id": "ensi-tanaman",
+    "storage_bucket": "ensi-tanaman.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:849667863089:android:10a7b0564fa901f3921b10",
+        "android_client_info": {
+          "package_name": "com.example.ensiplant"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB-ksNcZNUqfjVHdSxbK1_0BzrTpVZw2Ns"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
