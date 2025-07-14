@@ -1,0 +1,23 @@
+[
+  {
+    "id": "p01",
+    "nama": "Calathea 'Zebra Plant'",
+    "foto": "https://drive.google.com/file/d/1BUy0zG88JCfDQ2uEs9u0jNj_xdnQwzlZ/view?usp=drive_link",
+    "latin": "Calathea zebrina",
+    "deskripsi": "Calathea zebrina, yang dikenal luas sebagai 'Zebra Plant', adalah spesies tanaman hias herba menahun dari famili Marantaceae. Berasal dari hutan hujan tropis di tenggara Brasil, tanaman ini dihargai karena dedaunannya yang spektakuler. Daunnya yang beludru, berbentuk lonjong, menampilkan pola garis-garis hijau tua yang kontras dengan latar belakang hijau limau pucat, menyerupai pola pada seekor zebra. Bagian bawah daun berwarna ungu tua yang mencolok. Sebagai anggota 'tanaman doa', Calathea zebrina menunjukkan gerakan nyctinastic, di mana daunnya terlipat ke atas pada malam hari dan terbuka kembali di pagi hari. Di habitat aslinya, ia tumbuh di bawah kanopi hutan yang teduh, sehingga ia lebih menyukai cahaya terang yang tidak langsung, kelembapan tinggi, dan tanah yang subur serta dijaga tetap lembap tetapi tidak tergenang air."
+  },
+  {
+    "id": "p02",
+    "nama": "Monstera Deliciosa",
+    "foto": "https://drive.google.com/file/d/1FOYFyBLN5LyxVLDkeqdnNAk2H-R2M5Hd/view?usp=drive_link",
+    "latin": "Monstera deliciosa",
+    "deskripsi": "Monstera deliciosa, atau yang sering disebut 'Swiss Cheese Plant', adalah spesies tanaman merambat tropis dari famili Araceae, yang berasal dari hutan hujan di Meksiko selatan hingga Panama. Tanaman ini sangat ikonik karena daunnya yang besar, mengkilap, dan berbentuk hati yang mengembangkan lubang-lubang khas atau fenestrasi seiring bertambahnya usia. Fenestrasi ini diduga merupakan adaptasi untuk memaksimalkan penangkapan cahaya matahari di lantai hutan yang redup dan untuk menahan angin kencang. Di alam liar, ia memanjat pohon menggunakan akar udara (aerial roots) untuk mencapai ketinggian hingga 20 meter. Selain sebagai tanaman hias yang sangat populer, Monstera deliciosa juga menghasilkan buah yang dapat dimakan, yang konon rasanya seperti kombinasi nanas dan pisang, dari sinilah nama 'deliciosa' berasal. Namun, buahnya harus matang sempurna karena buah mentah mengandung asam oksalat yang dapat menyebabkan iritasi parah."
+  },
+  {
+    "id": "p03",
+    "nama": "Jagung",
+    "foto": "https://drive.google.com/file/d/1cjRIZ3Iz_VwGZfd9z6cGa6GEyzDehZGo/view?usp=drive_linkhttps://example.com/jagung.jpg",
+    "latin": "Zea mays",
+    "deskripsi": "Jagung (Zea mays) adalah tanaman biji-bijian sereal tinggi yang pertama kali didomestikasi oleh masyarakat adat di Meksiko selatan sekitar 10.000 tahun yang lalu dari rumput liar bernama teosinte. Secara botani, jagung adalah sejenis rumput dalam famili Poaceae dan merupakan salah satu tanaman pangan paling vital di dunia, bersama gandum dan padi. Setiap bagian tanaman memiliki fungsi; bijinya yang kaya akan karbohidrat menjadi sumber makanan pokok bagi manusia dan pakan ternak. Batang dan daunnya digunakan sebagai silase, sementara tongkolnya dapat diolah menjadi berbagai produk industri. Jagung juga merupakan sumber utama untuk produksi etanol (biofuel), sirup jagung fruktosa tinggi, dan tepung maizena. Penyerbukannya terjadi melalui angin, di mana serbuk sari dari bunga jantan (tassel) jatuh ke benang sari bunga betina (silk) pada setiap tongkol. Keragaman varietasnya sangat luas, mulai dari jagung manis yang biasa dikonsumsi hingga jagung flint yang keras untuk digiling menjadi tepung."
+  }
+]

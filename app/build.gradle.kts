@@ -56,5 +56,9 @@ dependencies {
     implementation("com.google.firebase:firebase-analytics")
     // Add the dependencies for any other desired Firebase products
     // https://firebase.google.com/docs/android/setup#available-libraries
+    implementation ("com.google.code.gson:gson:2.10.1")
+    implementation ("com.google.android.gms:play-services-auth:20.7.0")
+
+
 
 }
