@@ -1,5 +1,7 @@
 package com.example.ensiplant
 
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.firestore.FirebaseFirestore
@@ -46,5 +48,15 @@ class AuthRepository(private val auth: FirebaseAuth, private val db: FirebaseFir
 
     fun logout() {
         auth.signOut()
+    }
+}
+
+class AuthViewModelFactory(private val repository: AuthRepository) : ViewModelProvider.Factory {
+    override fun <T : ViewModel> create(modelClass: Class<T>): T {
+        if (modelClass.isAssignableFrom(AuthViewModel::class.java)) {
+            @Suppress("UNCHECKED_CAST")
+            return AuthViewModel(repository) as T
+        }
+        throw IllegalArgumentException("Unknown ViewModel class")
     }
 }

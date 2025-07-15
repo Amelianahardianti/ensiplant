@@ -5,28 +5,50 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
+import androidx.lifecycle.ViewModelProvider
+import com.example.ensiplant.AuthRepository
+import com.example.ensiplant.AuthViewModel
+import com.example.ensiplant.AuthViewModelFactory
 import com.example.ensiplant.MainActivity
 import com.example.ensiplant.databinding.ActivityRegisterBinding
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
+import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.ktx.Firebase
 
 class RegisterActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityRegisterBinding
     private lateinit var auth: FirebaseAuth
+    private lateinit var viewModel: AuthViewModel
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityRegisterBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        auth = Firebase.auth
+
+        val auth = FirebaseAuth.getInstance()
+        val db = FirebaseFirestore.getInstance()
+        val factory = AuthViewModelFactory(AuthRepository(auth, db))
+        viewModel = ViewModelProvider(this, factory)[AuthViewModel::class.java]
 
         setupActionListeners()
     }
 
     private fun setupActionListeners() {
+        // Observe state dari ViewModel
+        viewModel.isAuthenticated.observe(this) { isRegistered ->
+            if (isRegistered) {
+                Toast.makeText(this, "Registrasi berhasil!", Toast.LENGTH_SHORT).show()
+                startActivity(Intent(this, MainActivity::class.java))
+                finish()
+            } else {
+                Toast.makeText(this, "Registrasi gagal. Coba lagi ya!", Toast.LENGTH_SHORT).show()
+            }
+        }
+
         // Tombol Register
         binding.buttonRegister.setOnClickListener {
             val username = binding.editTextUsernameRegister.text.toString().trim()
@@ -41,34 +63,18 @@ class RegisterActivity : AppCompatActivity() {
             }
 
             if (password != confirmPassword) {
-                Toast.makeText(this, "Password dan konfirmasi password tidak cocok!", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Password dan konfirmasi tidak cocok!", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
 
-            // Jika validasi lolos, lanjutkan dengan registrasi ke Firebase
-            // 3. Panggil fungsi createUserWithEmailAndPassword
-            auth.createUserWithEmailAndPassword(email, password)
-                .addOnCompleteListener(this) { task ->
-                    if (task.isSuccessful) {
-                        // Jika registrasi berhasil
-                        Log.d("Auth", "createUserWithEmail:success")
-                        Toast.makeText(this, "Registrasi berhasil!", Toast.LENGTH_SHORT).show()
-
-                        finish()
-                    } else {
-                        // Jika registrasi gagal
-                        Log.w("Auth", "createUserWithEmail:failure", task.exception)
-                        Toast.makeText(
-                            baseContext,
-                            "Registrasi gagal: ${task.exception?.message}",
-                            Toast.LENGTH_LONG,
-                        ).show()
-                    }
-                }
+            // Jalankan proses register via ViewModel
+            viewModel.register(email, password, username)
         }
 
+        // Teks "Sudah punya akun?"
         binding.textViewToLogin.setOnClickListener {
             finish()
         }
     }
+
 }

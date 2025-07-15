@@ -13,6 +13,8 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+
+
         val user = Firebase.auth.currentUser
         Log.d("FIREBASE", "User Login: $user")
 
