@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
+    android:background="@color/app_background"
     tools:context=".ui.auth.LoginActivity">
 
     <LinearLayout
@@ -164,6 +164,7 @@
             android:src="@drawable/ic_google" />
     </LinearLayout>
 
+    <!-- ProgressBar untuk Indikator Loading -->
     <ProgressBar
         android:id="@+id/progress_bar"
         android:layout_width="wrap_content"

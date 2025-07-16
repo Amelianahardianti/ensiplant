@@ -1,6 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/nav_main">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_main"
+    app:startDestination="@id/forumFragment">
+
+    <!-- Destination untuk Forum, menjadi halaman awal -->
+    <fragment
+        android:id="@+id/forumFragment"
+        android:name="com.example.ensiplant.ui.forum.ForumFragment"
+        android:label="fragment_forum"
+        tools:layout="@layout/fragment_forum" />
+
+    <!-- Destination untuk Ensiklopedia -->
+    <fragment
+        android:id="@+id/encyclopediaFragment"
+        android:name="com.example.ensiplant.ui.ensiklopedia.EnsiklopediaFragment"
+        android:label="fragment_ensiklopedia"
+        tools:layout="@layout/fragment_ensiklopedia" >
+        <!-- ACTION: dari halaman daftar ke halaman detail -->
+        <action
+            android:id="@+id/action_ensiklopediaFragment_to_plantDetailFragment"
+            app:destination="@id/plantDetailFragment" />
+    </fragment>
+
+    <!-- Destination untuk Profil -->
+    <fragment
+        android:id="@+id/profileFragment"
+        android:name="com.example.ensiplant.ui.profile.ProfileFragment"
+        android:label="fragment_profile"
+        tools:layout="@layout/fragment_profile" />
+
+    <!-- Destination untuk Halaman Detail Tanaman -->
+    <fragment
+        android:id="@+id/plantDetailFragment"
+        android:name="com.example.ensiplant.ui.ensiklopedia.PlantDetailFragment"
+        android:label="fragment_plant_detail"
+        tools:layout="@layout/fragment_plant_detail" >
+        <argument
+            android:name="plant"
+            app:argType="com.example.ensiplant.data.model.Plant" />
+    </fragment>
 
 </navigation>
