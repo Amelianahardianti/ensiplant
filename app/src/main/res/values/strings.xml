@@ -26,4 +26,11 @@
     <string name="search">Search</string>
     <string name="ini_fragment_buat_forum">INI FRAGMENT BUAT FORUM</string>
     <string name="ini_fragment_buat_profile">INI FRAGMENT BUAT PROFILE</string>
+    <string name="posted">Posted</string>
+    <string name="update">Update</string>
+    <string name="email">Email</string>
+    <string name="city">City</string>
+    <string name="make_a_post">Make a post</string>
+    <string name="write_about_your_plant">Write about your plant...</string>
+    <string name="post">Post</string>
 </resources>

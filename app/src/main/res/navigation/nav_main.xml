@@ -5,7 +5,7 @@
     android:id="@+id/nav_main"
     app:startDestination="@id/forumFragment">
 
-    <!-- Destination untuk Forum, menjadi halaman awal -->
+    <!-- Destination untuk Forum -->
     <fragment
         android:id="@+id/forumFragment"
         android:name="com.example.ensiplant.ui.forum.ForumFragment"
@@ -18,7 +18,6 @@
         android:name="com.example.ensiplant.ui.ensiklopedia.EnsiklopediaFragment"
         android:label="fragment_ensiklopedia"
         tools:layout="@layout/fragment_ensiklopedia" >
-        <!-- ACTION: dari halaman daftar ke halaman detail -->
         <action
             android:id="@+id/action_ensiklopediaFragment_to_plantDetailFragment"
             app:destination="@id/plantDetailFragment" />
@@ -29,9 +28,18 @@
         android:id="@+id/profileFragment"
         android:name="com.example.ensiplant.ui.profile.ProfileFragment"
         android:label="fragment_profile"
-        tools:layout="@layout/fragment_profile" />
+        tools:layout="@layout/fragment_profile" >
+        <!-- Action dari Profil ke Edit Profil -->
+        <action
+            android:id="@+id/action_profileFragment_to_editProfileFragment"
+            app:destination="@id/editProfileFragment" />
+        <!-- Action dari Profil ke Buat Postingan -->
+        <action
+            android:id="@+id/action_profileFragment_to_createPostFragment"
+            app:destination="@id/createPostFragment" />
+    </fragment>
 
-    <!-- Destination untuk Halaman Detail Tanaman -->
+    <!-- Destination untuk Detail Tanaman -->
     <fragment
         android:id="@+id/plantDetailFragment"
         android:name="com.example.ensiplant.ui.ensiklopedia.PlantDetailFragment"
@@ -41,5 +49,19 @@
             android:name="plant"
             app:argType="com.example.ensiplant.data.model.Plant" />
     </fragment>
+
+    <!-- Destination untuk Edit Profil -->
+    <fragment
+        android:id="@+id/editProfileFragment"
+        android:name="com.example.ensiplant.ui.profile.EditProfileFragment"
+        android:label="fragment_edit_profile"
+        tools:layout="@layout/fragment_edit_profile" />
+
+    <!-- Destination untuk Buat Postingan -->
+    <fragment
+        android:id="@+id/createPostFragment"
+        android:name="com.example.ensiplant.ui.forum.CreatePostFragment"
+        android:label="fragment_create_post"
+        tools:layout="@layout/fragment_create_post" />
 
 </navigation>

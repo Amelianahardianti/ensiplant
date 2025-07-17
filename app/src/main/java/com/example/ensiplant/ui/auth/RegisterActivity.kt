@@ -34,15 +34,24 @@ class RegisterActivity : AppCompatActivity() {
     }
 
     private fun setupActionListeners() {
+        // Mengamati perubahan state registrasi dari ViewModel
         viewModel.isAuthenticated.observe(this) { isRegistered ->
-            // Loading di sembunyikan setelah proses selesai
             showLoading(false)
 
             if (isRegistered) {
-                Toast.makeText(this, "Registration successful! Please login..", Toast.LENGTH_SHORT).show()
-                finish()
+                Toast.makeText(this, "Registrasi berhasil! Silakan lengkapi profilmu.", Toast.LENGTH_LONG).show()
+
+                // Pindah ke MainActivity dengan membawa sinyal "pengguna baru"
+                val intent = Intent(this, MainActivity::class.java).apply {
+                    // Menambahkan "pesan" bahwa ini adalah pengguna baru
+                    putExtra("IS_NEW_USER", true)
+                    // Membersihkan semua activity sebelumnya agar tidak bisa kembali ke login/register
+                    flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                }
+                startActivity(intent)
+
             } else {
-                Toast.makeText(this, "Registration failed.", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Registrasi gagal. Email mungkin sudah terdaftar.", Toast.LENGTH_SHORT).show()
             }
         }
 
@@ -53,14 +62,13 @@ class RegisterActivity : AppCompatActivity() {
             val password = binding.editTextPasswordRegister.text.toString().trim()
             val confirmPassword = binding.editTextConfirmPasswordRegister.text.toString().trim()
 
-            // Validasi input
             if (username.isEmpty() || email.isEmpty() || password.isEmpty() || confirmPassword.isEmpty()) {
-                Toast.makeText(this, "All fields must be filled in!", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Semua field harus diisi!", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
 
             if (password != confirmPassword) {
-                Toast.makeText(this, "Password and confirmation do not match!", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Password dan konfirmasi tidak cocok!", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
 
@@ -68,12 +76,12 @@ class RegisterActivity : AppCompatActivity() {
             viewModel.register(email, password, username)
         }
 
+        // Teks "Sudah punya akun?" untuk kembali ke Login
         binding.textViewToLogin.setOnClickListener {
             finish()
         }
     }
 
-    // Menampilkan/menyembunyikan ProgressBar
     private fun showLoading(isLoading: Boolean) {
         if (isLoading) {
             binding.progressBarRegister.visibility = View.VISIBLE

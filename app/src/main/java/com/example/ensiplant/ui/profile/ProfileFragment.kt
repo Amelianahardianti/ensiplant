@@ -1,60 +1,83 @@
 package com.example.ensiplant.ui.profile
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.ensiplant.R
+import com.example.ensiplant.data.model.forum.Post
+import com.example.ensiplant.databinding.FragmentProfileBinding
+import com.example.ensiplant.ui.forum.PostAdapter
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
-
-/**
- * A simple [Fragment] subclass.
- * Use the [ProfileFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
 class ProfileFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
-    }
+    private var _binding: FragmentProfileBinding? = null
+    private val binding get() = _binding!!
+
+    private val postAdapter by lazy { PostAdapter() }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_profile, container, false)
+    ): View {
+        _binding = FragmentProfileBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment ProfileFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            ProfileFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
-            }
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        setupRecyclerView()
+        loadProfileData()
+        loadUserPosts()
+        setupClickListeners()
+    }
+
+    private fun setupRecyclerView() {
+        binding.rvUserPosts.apply {
+            layoutManager = LinearLayoutManager(context)
+            adapter = postAdapter
+        }
+    }
+
+    private fun loadProfileData() {
+        // TODO BE: Panggil fungsi di ViewModel untuk mengambil data user yang sedang login.
+        // ViewModel akan mengambil data dari Firestore (username, email, lokasi, foto profil)
+        // dan menampilkannya di sini.
+        binding.tvProfileUsername.text = "Nathania"
+        binding.tvProfileEmail.text = "@nathaniaaa"
+        binding.tvLocation.text = "Yogyakarta"
+        // binding.ivProfilePicture.setImageResource(...)
+    }
+
+    private fun loadUserPosts() {
+        // TODO (Untuk BE): Panggil fungsi di ViewModel untuk mengambil daftar postingan
+        // yang dibuat oleh user ini dari Firestore.
+        val dummyPosts = listOf(
+            Post("p1", "uid1", "nathaniaaa", "url", "17 July 2025", "url", "Look at my new plant!!", 12, 3, true),
+            Post("p2", "uid1", "nathaniaaa", "url", "16 July 2025", "url", "My second plant here!", 25, 5)
+        )
+        postAdapter.submitList(dummyPosts)
+    }
+
+    private fun setupClickListeners(){
+        binding.btnEditProfile.setOnClickListener {
+            // Navigasi ke halaman Edit Profile
+            findNavController().navigate(R.id.action_profileFragment_to_editProfileFragment)
+        }
+
+        binding.fabAddPost.setOnClickListener {
+            // Navigasi ke halaman Buat Postingan Baru
+            findNavController().navigate(R.id.action_profileFragment_to_createPostFragment)
+        }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }
