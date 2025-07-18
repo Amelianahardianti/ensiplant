@@ -7,9 +7,11 @@ import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class Plant(
-    val id: String,
-    val nama: String,
-    val foto: String,
-    val latin: String,
-    val timestamp: String
+    val id: String = "",
+    val nama: String = "",
+    val foto: String? = null,
+    val latin: String = "",
+    val timestamp: String = "",
+    val deskripsi: String = ""
 ) : Parcelable
+

@@ -10,6 +10,9 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.ensiplant.data.model.Plant
 import com.example.ensiplant.databinding.FragmentEnsiklopediaBinding
+import com.google.firebase.Firebase
+import com.google.firebase.firestore.firestore
+import androidx.core.widget.doOnTextChanged
 
 class EnsiklopediaFragment : Fragment() {
 
@@ -30,8 +33,15 @@ class EnsiklopediaFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+
+        binding.etSearch.doOnTextChanged { text, _, _, _ ->
+            plantAdapter.filter(text.toString())
+        }
+
+
+
         setupRecyclerView()
-        loadDummyData()
+        loadPlantsFromFirestore()
         setupItemClick()
     }
 
@@ -43,20 +53,29 @@ class EnsiklopediaFragment : Fragment() {
         }
     }
 
-    private fun loadDummyData() {
-        // TODO (Untuk BE): Ganti fungsi ini dengan logika untuk mengambil data dari file JSON.
-        // DATA INI DUMMYYYY
-        val dummyPlantList = listOf(
-            Plant("1", "Zebra Plant", "Calathea zebrina", "12 Mar • 5 min", "url_gambar_1"),
-            Plant("2", "Bayam", "Amaranthus", "12 Mar • 3 min", "url_gambar_2"),
-            Plant("3", "Jagung", "Zea mays", "12 Mar • 3 min", "url_gambar_3"),
-            Plant("4", "Lidah Mertua", "Sansevieria trifasciata", "12 Mar • 3 min", "url_gambar_4"),
-            Plant("5", "Monstera", "Monstera deliciosa", "11 Mar • 4 min", "url_gambar_5")
-        )
+    private fun loadPlantsFromFirestore() {
+        val db = Firebase.firestore
 
-        // Mengirim data dummy ke adapter
-        plantAdapter.submitList(dummyPlantList)
+        db.collection("plants")
+            .get()
+            .addOnSuccessListener { result ->
+                val plantList = result.map { document ->
+                    Plant(
+                        id = document.id,
+                        nama = document.getString("nama") ?: "",
+                        latin = document.getString("latin") ?: "",
+                        timestamp = document.getString("timestamp") ?: "",
+                        foto = document.getString("foto") ?: "",
+                        deskripsi = document.getString("deskripsi") ?: ""
+                    )
+                }
+                plantAdapter.submitList(plantList)
+            }
+            .addOnFailureListener { exception ->
+                Toast.makeText(context, "Gagal memuat data: ${exception.message}", Toast.LENGTH_SHORT).show()
+            }
     }
+
 
     private fun setupItemClick() {
         // Menambahkan aksi saat salah satu item tanaman di klik

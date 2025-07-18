@@ -1,5 +1,7 @@
 package com.example.ensiplant
 
+import LoginActivity
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
@@ -13,40 +15,51 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var auth: FirebaseAuth
 
+
+    override fun onStart() {
+        super.onStart()
+        // Jangan redirect ke LoginActivity lagi dari sini!
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        uploadPlantsToFirestore(this)
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        // Inisialisasi Firebase Auth
         auth = FirebaseAuth.getInstance()
 
-        // Setup Navigasi
-        setupNavigation()
+        // Pengecekan login & rememberMe
+        checkLoginStatus()
 
-        // Pengecekan pengguna yang sudah login
-        checkCurrentUser()
+        setupNavigation()
     }
 
     private fun setupNavigation() {
-        // Mencari NavHostFragment dari layout activity_main.xml
         val navHostFragment = supportFragmentManager
             .findFragmentById(R.id.nav_host_fragment_main) as NavHostFragment
 
-        // Mendapatkan NavController dari NavHostFragment
         val navController = navHostFragment.navController
-
-        // Hubungkan BottomNavigationView dengan NavController
         binding.bottomNavigationView.setupWithNavController(navController)
     }
 
-    private fun checkCurrentUser() {
+    private fun checkLoginStatus() {
+        val prefs = getSharedPreferences("loginPrefs", MODE_PRIVATE)
+        val rememberMe = prefs.getBoolean("rememberMe", false)
         val currentUser = auth.currentUser
-        if (currentUser != null) {
-            Log.d("AuthCheck", "User is logged in: ${currentUser.email}")
+
+        Log.d("RememberMe", "rememberMe: $rememberMe, currentUser: ${currentUser?.email}")
+
+        // Cek apakah user belum login atau tidak mencentang "Remember Me"
+        if (currentUser == null || !rememberMe) {
+            Log.d("MainActivity", "Redirecting to LoginActivity")
+
+            startActivity(Intent(this, LoginActivity::class.java))
+            finish()
         } else {
-            Log.d("AuthCheck", "No user is logged in")
+            Log.d("MainActivity", "User remembered and logged in, staying in MainActivity")
         }
     }
 }

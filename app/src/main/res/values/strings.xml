@@ -2,6 +2,7 @@
     <string name="app_name">ensiplant</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="default_web_client_id">849667863089-iku13uh97i0euig4fohihqv8i18g16ke.apps.googleusercontent.com</string>
     <string name="ensiplant">EnsiPlant</string>
     <string name="login">Login</string>
     <string name="enter_password">Enter Password</string>
