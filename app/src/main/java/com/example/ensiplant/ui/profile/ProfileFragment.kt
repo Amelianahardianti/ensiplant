@@ -1,5 +1,6 @@
 package com.example.ensiplant.ui.profile
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -12,6 +13,8 @@ import com.example.ensiplant.R
 import com.example.ensiplant.data.model.forum.Post
 import com.example.ensiplant.databinding.FragmentProfileBinding
 import com.example.ensiplant.ui.forum.PostAdapter
+import com.example.ensiplant.ui.auth.LoginActivity
+import com.google.firebase.auth.FirebaseAuth
 
 class ProfileFragment : Fragment() {
 
@@ -19,6 +22,7 @@ class ProfileFragment : Fragment() {
     private val binding get() = _binding!!
 
     private val postAdapter by lazy { PostAdapter() }
+    private lateinit var firebaseAuth: FirebaseAuth
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -30,6 +34,8 @@ class ProfileFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        firebaseAuth = FirebaseAuth.getInstance()
 
         setupRecyclerView()
         loadProfileData()
@@ -74,7 +80,25 @@ class ProfileFragment : Fragment() {
             // Navigasi ke halaman Buat Postingan Baru
             findNavController().navigate(R.id.action_profileFragment_to_createPostFragment)
         }
+
+        binding.btnLogout.setOnClickListener {
+            performLogout()
+        }
     }
+
+    // Proses logout
+    private fun performLogout() {
+        // TODO BE: Proses sign out dari Firebase Authentication
+        firebaseAuth.signOut()
+
+        // Arahkan pengguna kembali ke LoginActivity
+        val intent = Intent(activity, LoginActivity::class.java).apply {
+            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        }
+        startActivity(intent)
+        activity?.finish()
+    }
+
 
     override fun onDestroyView() {
         super.onDestroyView()
