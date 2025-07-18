@@ -1,6 +1,6 @@
 package com.example.ensiplant
 
-import LoginActivity
+
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -18,24 +18,31 @@ class MainActivity : AppCompatActivity() {
 
     override fun onStart() {
         super.onStart()
-        // Jangan redirect ke LoginActivity lagi dari sini!
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        uploadPlantsToFirestore(this)
+        auth = FirebaseAuth.getInstance()
+        val currentUser = auth.currentUser
 
+        if (currentUser == null) {
+            // User belum login, langsung ke LoginActivity
+            startActivity(Intent(this, LoginActivity::class.java))
+            finish()
+            return
+        }
+
+        // User sudah login, langsung tampilkan MainActivity
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        auth = FirebaseAuth.getInstance()
-
-        // Pengecekan login & rememberMe
-        checkLoginStatus()
-
+        uploadPlantsToFirestore(this)
         setupNavigation()
     }
+
+
+
 
     private fun setupNavigation() {
         val navHostFragment = supportFragmentManager
@@ -45,21 +52,4 @@ class MainActivity : AppCompatActivity() {
         binding.bottomNavigationView.setupWithNavController(navController)
     }
 
-    private fun checkLoginStatus() {
-        val prefs = getSharedPreferences("loginPrefs", MODE_PRIVATE)
-        val rememberMe = prefs.getBoolean("rememberMe", false)
-        val currentUser = auth.currentUser
-
-        Log.d("RememberMe", "rememberMe: $rememberMe, currentUser: ${currentUser?.email}")
-
-        // Cek apakah user belum login atau tidak mencentang "Remember Me"
-        if (currentUser == null || !rememberMe) {
-            Log.d("MainActivity", "Redirecting to LoginActivity")
-
-            startActivity(Intent(this, LoginActivity::class.java))
-            finish()
-        } else {
-            Log.d("MainActivity", "User remembered and logged in, staying in MainActivity")
-        }
-    }
 }

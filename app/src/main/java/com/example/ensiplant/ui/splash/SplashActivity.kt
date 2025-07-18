@@ -1,6 +1,6 @@
 package com.example.ensiplant.ui.splash
 
-import LoginActivity
+
 import android.annotation.SuppressLint
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
@@ -10,6 +10,8 @@ import android.os.Looper
 import com.example.ensiplant.MainActivity
 import com.example.ensiplant.R
 import com.google.firebase.auth.FirebaseAuth
+import com.example.ensiplant.LoginActivity
+
 
 @SuppressLint("CustomSplashScreen")
 class SplashActivity : AppCompatActivity() {

@@ -1,15 +1,10 @@
-package com.example.ensiplant.ui.auth
+package com.example.ensiplant.auth
 
-import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
-import com.example.ensiplant.AuthRepository
-import com.example.ensiplant.AuthViewModel
-import com.example.ensiplant.AuthViewModelFactory
-import com.example.ensiplant.MainActivity
 import com.example.ensiplant.databinding.ActivityRegisterBinding
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore

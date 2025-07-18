@@ -1,23 +1,32 @@
-package com.example.ensiplant
+package com.example.ensiplant.auth
 
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.firestore.FirebaseFirestore
 
-class AuthRepository(private val auth: FirebaseAuth, private val db: FirebaseFirestore) {
+class AuthRepository(
+    private val auth: FirebaseAuth,
+    private val db: FirebaseFirestore
+) {
 
     fun register(email: String, password: String, username: String, onResult: (Boolean) -> Unit) {
         auth.createUserWithEmailAndPassword(email, password)
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
                     val uid = auth.currentUser?.uid
-                    val user = hashMapOf("email" to email, "username" to username)
+                    val user = hashMapOf(
+                        "uid" to uid,
+                        "email" to email,
+                        "username" to username,
+                        "location" to null,
+                        "avatar" to null
+                    )
                     if (uid != null) {
-                        db.collection("users").document(password).set(user) //ntr namanya users di auth
+                        db.collection("users").document(uid).set(user)
                             .addOnSuccessListener { onResult(true) }
                             .addOnFailureListener { onResult(false) }
+                    } else {
+                        onResult(false)
                     }
                 } else {
                     onResult(false)
@@ -38,7 +47,27 @@ class AuthRepository(private val auth: FirebaseAuth, private val db: FirebaseFir
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
                     val user = auth.currentUser
-                    // Optional: Save to Firestore if new
+                    val uid = user?.uid
+                    val email = user?.email ?: ""
+                    val username = user?.displayName ?: ""
+
+                    // Simpan user baru ke Firestore kalau belum ada
+                    if (uid != null) {
+                        val userRef = db.collection("users").document(uid)
+                        userRef.get().addOnSuccessListener { document ->
+                            if (!document.exists()) {
+                                val userData = hashMapOf(
+                                    "uid" to uid,
+                                    "email" to email,
+                                    "username" to username,
+                                    "location" to null,
+                                    "avatar" to null
+                                )
+                                userRef.set(userData)
+                            }
+                        }
+                    }
+
                     onResult(true)
                 } else {
                     onResult(false)
@@ -48,15 +77,5 @@ class AuthRepository(private val auth: FirebaseAuth, private val db: FirebaseFir
 
     fun logout() {
         auth.signOut()
-    }
-}
-
-class AuthViewModelFactory(private val repository: AuthRepository) : ViewModelProvider.Factory {
-    override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        if (modelClass.isAssignableFrom(AuthViewModel::class.java)) {
-            @Suppress("UNCHECKED_CAST")
-            return AuthViewModel(repository) as T
-        }
-        throw IllegalArgumentException("Unknown ViewModel class")
     }
 }

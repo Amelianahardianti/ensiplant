@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
+
+    <!-- Internet permission -->
     <uses-permission android:name="android.permission.INTERNET"/>
 
     <application
@@ -14,29 +16,32 @@
         android:theme="@style/Theme.Ensiplant"
         tools:targetApi="31">
 
-        <activity
-            android:name=".ui.auth.RegisterActivity"
-            android:exported="false" />
+        <!-- Splash screen (launcher) -->
         <activity
             android:name=".ui.splash.SplashActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <!-- Login & Register -->
+        <activity android:name=".LoginActivity" android:exported="true" />
+
         <activity
-            android:name=".ui.auth.LoginActivity"
+            android:name=".auth.RegisterActivity"
             android:exported="false" />
+
+        <!-- Main Activity -->
         <activity
             android:name=".MainActivity"
-            android:exported="true"></activity>
+            android:exported="true" />
 
+        <!-- Font preload -->
         <meta-data
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />
     </application>
-
 
 </manifest>

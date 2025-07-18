@@ -1,4 +1,4 @@
-package com.example.ensiplant
+package com.example.ensiplant.auth
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
