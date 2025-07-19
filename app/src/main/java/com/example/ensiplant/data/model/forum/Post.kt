@@ -1,4 +1,4 @@
-package com.example.ensiplant.data.model.Forum
+package com.example.ensiplant.data.model.forum
 
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize

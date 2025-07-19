@@ -1,4 +1,4 @@
-package com.example.ensiplant
+package com.example.ensiplant.auth
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
@@ -6,11 +6,9 @@ import android.os.Bundle
 import android.view.View
 import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
-import com.example.ensiplant.auth.AuthRepository
-import com.example.ensiplant.auth.AuthViewModel
-import com.example.ensiplant.auth.AuthViewModelFactory
+import com.example.ensiplant.MainActivity
+import com.example.ensiplant.R
 import com.example.ensiplant.databinding.ActivityLoginBinding
-import com.example.ensiplant.auth.RegisterActivity
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
@@ -109,7 +107,6 @@ class LoginActivity : AppCompatActivity() {
                                 }
                         }
 
-                        // Save remember me dan navigasi
                         val prefs = getSharedPreferences("loginPrefs", MODE_PRIVATE).edit()
                         if (binding.checkboxRememberMe.isChecked) {
                             prefs.putBoolean("rememberMe", true)

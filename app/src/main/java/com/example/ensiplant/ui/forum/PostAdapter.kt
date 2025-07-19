@@ -6,11 +6,15 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.ensiplant.R
-import com.example.ensiplant.data.model.Forum.Post
+import com.example.ensiplant.data.model.forum.Post
 import com.example.ensiplant.databinding.ItemForumPostBinding
-// import com.bumptech.glide.Glide // Nanti kita akan pakai ini untuk memuat gambar
+// import com.bumptech.glide.Glide
 
-class PostAdapter : ListAdapter<Post, PostAdapter.PostViewHolder>(POST_COMPARATOR) {
+// DIUBAH: Constructor sekarang menerima dua jenis click listener
+class PostAdapter(
+    private val onPostClick: (Post) -> Unit,
+    private val onCommentIconClick: (Post) -> Unit
+) : ListAdapter<Post, PostAdapter.PostViewHolder>(POST_COMPARATOR) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PostViewHolder {
         val binding = ItemForumPostBinding.inflate(LayoutInflater.from(parent.context), parent, false)
@@ -21,6 +25,10 @@ class PostAdapter : ListAdapter<Post, PostAdapter.PostViewHolder>(POST_COMPARATO
         val post = getItem(position)
         if (post != null) {
             holder.bind(post)
+            // Listener untuk seluruh item view (navigasi biasa)
+            holder.itemView.setOnClickListener {
+                onPostClick(post)
+            }
         }
     }
 
@@ -36,27 +44,28 @@ class PostAdapter : ListAdapter<Post, PostAdapter.PostViewHolder>(POST_COMPARATO
             // Glide.with(itemView.context).load(post.userAvatarUrl).into(binding.ivUserAvatar)
             // Glide.with(itemView.context).load(post.postImageUrl).into(binding.ivPostImage)
 
-            // Mengatur ikon like berdasarkan status
             updateLikeIcon(post.isLikedByUser)
 
-            // Aksi saat tombol like diklik
+            // Listener untuk tombol like
             binding.btnLike.setOnClickListener {
                 // TODO (Untuk BE): Panggil fungsi di ViewModel untuk handle like/unlike.
-                // ViewModel akan mengubah data di Firestore dan mengupdate LiveData.
-                // Untuk sementara, kita hanya ubah status lokal untuk demo.
                 post.isLikedByUser = !post.isLikedByUser
                 if (post.isLikedByUser) post.likeCount++ else post.likeCount--
-
                 updateLikeIcon(post.isLikedByUser)
                 binding.tvLikeCount.text = post.likeCount.toString()
+            }
+
+            // DIUBAH: Menambahkan listener khusus untuk ikon komentar
+            binding.btnComment.setOnClickListener {
+                onCommentIconClick(post)
             }
         }
 
         private fun updateLikeIcon(isLiked: Boolean) {
             if (isLiked) {
-                binding.btnLike.setImageResource(R.drawable.ic_like_active) // Hati merah
+                binding.btnLike.setImageResource(R.drawable.ic_like_active)
             } else {
-                binding.btnLike.setImageResource(R.drawable.ic_like_inactive) // Hati kosong
+                binding.btnLike.setImageResource(R.drawable.ic_like_inactive)
             }
         }
     }

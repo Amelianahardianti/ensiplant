@@ -5,14 +5,26 @@
     android:id="@+id/nav_main"
     app:startDestination="@id/forumFragment">
 
-    <!-- Forum (Halaman Awal) -->
+    <!-- forum -->
     <fragment
         android:id="@+id/forumFragment"
         android:name="com.example.ensiplant.ui.forum.ForumFragment"
         android:label="fragment_forum"
-        tools:layout="@layout/fragment_forum" />
+        tools:layout="@layout/fragment_forum">
+        <action
+            android:id="@+id/action_forumFragment_to_createPostFragment"
+            app:destination="@id/createPostFragment" />
 
-    <!-- Ensiklopedia -->
+        <action
+            android:id="@+id/action_forumFragment_to_profileFragment"
+            app:destination="@id/profileFragment" />
+
+        <action
+            android:id="@+id/action_forumFragment_to_postDetailFragment"
+            app:destination="@id/postDetailFragment" />
+    </fragment>
+
+    <!-- ensiklopedia -->
     <fragment
         android:id="@+id/encyclopediaFragment"
         android:name="com.example.ensiplant.ui.ensiklopedia.EnsiklopediaFragment"
@@ -23,7 +35,7 @@
             app:destination="@id/plantDetailFragment" />
     </fragment>
 
-    <!-- Profil -->
+    <!-- profile -->
     <fragment
         android:id="@+id/profileFragment"
         android:name="com.example.ensiplant.ui.profile.ProfileFragment"
@@ -35,9 +47,12 @@
         <action
             android:id="@+id/action_profileFragment_to_createPostFragment"
             app:destination="@id/createPostFragment" />
+        <action
+            android:id="@+id/action_ProfileFragment_to_PostDetailFragment"
+            app:destination="@id/postDetailFragment" />
     </fragment>
 
-    <!-- Detail Tanaman -->
+    <!-- detail plant -->
     <fragment
         android:id="@+id/plantDetailFragment"
         android:name="com.example.ensiplant.ui.ensiklopedia.PlantDetailFragment"
@@ -48,17 +63,34 @@
             app:argType="com.example.ensiplant.data.model.Plant" />
     </fragment>
 
-    <!-- Edit Profil -->
+    <!-- edit profile -->
     <fragment
         android:id="@+id/editProfileFragment"
         android:name="com.example.ensiplant.ui.profile.EditProfileFragment"
         android:label="fragment_edit_profile"
         tools:layout="@layout/fragment_edit_profile" />
 
-    <!-- Buat Postingan -->
+    <!-- create post -->
     <fragment
         android:id="@+id/createPostFragment"
         android:name="com.example.ensiplant.ui.forum.CreatePostFragment"
         android:label="fragment_create_post"
         tools:layout="@layout/fragment_create_post" />
+
+    <!-- post detail -->
+    <fragment
+        android:id="@+id/postDetailFragment"
+        android:name="com.example.ensiplant.ui.forum.PostDetailFragment"
+        android:label="fragment_post_detail"
+        tools:layout="@layout/fragment_post_detail" >
+        <argument
+            android:name="postId"
+            app:argType="string" />
+
+        <argument
+            android:name="openKeyboard"
+            app:argType="boolean"
+            android:defaultValue="false" />
+    </fragment>
+
 </navigation>

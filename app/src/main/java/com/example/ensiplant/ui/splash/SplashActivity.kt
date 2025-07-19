@@ -10,7 +10,7 @@ import android.os.Looper
 import com.example.ensiplant.MainActivity
 import com.example.ensiplant.R
 import com.google.firebase.auth.FirebaseAuth
-import com.example.ensiplant.LoginActivity
+import com.example.ensiplant.auth.LoginActivity
 
 
 @SuppressLint("CustomSplashScreen")

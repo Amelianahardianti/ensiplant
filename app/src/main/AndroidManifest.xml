@@ -18,7 +18,7 @@
 
         <!-- Splash screen (launcher) -->
         <activity
-            android:name=".ui.splash.SplashActivity"
+            android:name="com.example.ensiplant.ui.splash.SplashActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -27,15 +27,15 @@
         </activity>
 
         <!-- Login & Register -->
-        <activity android:name=".LoginActivity" android:exported="true" />
+        <activity android:name="com.example.ensiplant.auth.LoginActivity" android:exported="true" />
 
         <activity
-            android:name=".auth.RegisterActivity"
+            android:name="com.example.ensiplant.auth.RegisterActivity"
             android:exported="false" />
 
         <!-- Main Activity -->
         <activity
-            android:name=".MainActivity"
+            android:name="com.example.ensiplant.MainActivity"
             android:exported="true" />
 
         <!-- Font preload -->

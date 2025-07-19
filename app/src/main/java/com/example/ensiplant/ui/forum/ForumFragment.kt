@@ -1,60 +1,93 @@
 package com.example.ensiplant.ui.forum
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.ensiplant.R
+import com.example.ensiplant.data.model.forum.Post
+import com.example.ensiplant.databinding.FragmentForumBinding
+import com.google.android.material.bottomnavigation.BottomNavigationView
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
-
-/**
- * A simple [Fragment] subclass.
- * Use the [ForumFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
 class ForumFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
+    private var _binding: FragmentForumBinding? = null
+    private val binding get() = _binding!!
+
+    private val postAdapter by lazy {
+        PostAdapter(
+            onPostClick = { post ->
+                // Navigasi biasa saat item diklik
+                val action = ForumFragmentDirections.actionForumFragmentToPostDetailFragment(post.id)
+                findNavController().navigate(action)
+            },
+            onCommentIconClick = { post ->
+                // Navigasi saat ikon komentar diklik
+                // TODO: Anda perlu cara untuk mengirim sinyal "buka keyboard" ke PostDetailFragment.
+                // Cara paling mudah adalah dengan menambahkan argumen baru di nav_graph.
+                val action = ForumFragmentDirections.actionForumFragmentToPostDetailFragment(post.id)
+                findNavController().navigate(action)
+                // Untuk sementara, kita navigasi biasa dulu.
+            }
+        )
     }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_forum, container, false)
+    ): View {
+        _binding = FragmentForumBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment ForumFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            ForumFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
-            }
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        binding.appBarLayout.setExpanded(true, false)
+
+        setupRecyclerView()
+        loadForumPosts()
+        setupClickListeners()
+    }
+
+    private fun setupRecyclerView() {
+        binding.rvForumPosts.apply {
+            layoutManager = LinearLayoutManager(context)
+            adapter = postAdapter
+        }
+    }
+
+    private fun loadForumPosts() {
+        // Dummy data
+        val dummyFypPosts = listOf(
+            Post("p3", "uid2", "amelianah", "url", "19 July 2025", "url", "My first post here, hello!", 54, 27),
+            Post("p1", "uid1", "nathaniaaa", "url", "18 July 2025", "url", "Look at my new plant!!", 12, 3, true),
+            Post("p2", "uid1", "nathaniaaa", "url", "17 July 2025", "url", "My second plant here!", 25, 5),
+            Post("p4", "uid3", "gemini", "url", "16 July 2025", "url", "Just sharing my new garden setup.", 102, 15)
+        )
+        postAdapter.submitList(dummyFypPosts)
+    }
+
+    private fun setupClickListeners() {
+        binding.fabAddPostForum.setOnClickListener {
+            findNavController().navigate(R.id.action_forumFragment_to_createPostFragment)
+        }
+
+        binding.includedToolbar.ivToolbarAvatar.setOnClickListener {
+            activity?.findViewById<BottomNavigationView>(R.id.bottom_navigation_view)?.selectedItemId = R.id.profileFragment
+        }
+
+        binding.includedToolbar.btnToolbarSearch.setOnClickListener {
+            binding.appBarLayout.setExpanded(true, true)
+        }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        binding.rvForumPosts.adapter = null
+        _binding = null
     }
 }
