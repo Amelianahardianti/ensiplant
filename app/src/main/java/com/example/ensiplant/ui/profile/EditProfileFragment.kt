@@ -53,9 +53,9 @@ class EditProfileFragment : Fragment() {
 
         binding.ivEditAvatar.setOnClickListener {
             val picker = AvatarPickerBottomSheet { avatarName ->
-                selectedAvatar = avatarName
+                selectedAvatar = avatarName.substringBefore(".").replace("_", "") // FIXED ✅
                 val resId = resources.getIdentifier(
-                    avatarName.substringBefore("."),
+                    selectedAvatar,
                     "drawable",
                     requireContext().packageName
                 )
@@ -63,6 +63,7 @@ class EditProfileFragment : Fragment() {
             }
             picker.show(parentFragmentManager, "AvatarPicker")
         }
+
 
         binding.btnUpdateProfile.setOnClickListener {
             val newUsername = binding.etEditUsername.text.toString().trim()

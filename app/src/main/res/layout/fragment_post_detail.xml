@@ -96,6 +96,16 @@
                 android:textColor="@android:color/black"
                 android:textSize="14sp" />
 
+            <ImageButton
+                android:id="@+id/btnSendComment"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_marginStart="8dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:src="@drawable/ic_send"
+                android:contentDescription="@string/kirim_komentar"
+                app:tint="@color/black" />
+
         </LinearLayout>
     </com.google.android.material.card.MaterialCardView>
 

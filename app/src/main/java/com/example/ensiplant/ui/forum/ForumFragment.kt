@@ -1,37 +1,42 @@
 package com.example.ensiplant.ui.forum
 
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.ensiplant.R
 import com.example.ensiplant.data.model.forum.Post
+import com.example.ensiplant.data.repository.PostRepository
 import com.example.ensiplant.databinding.FragmentForumBinding
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.Query
 
 class ForumFragment : Fragment() {
 
     private var _binding: FragmentForumBinding? = null
     private val binding get() = _binding!!
+    private val postRepository = PostRepository()
+    private var allPosts: List<Post> = emptyList()
+
 
     private val postAdapter by lazy {
         PostAdapter(
             onPostClick = { post ->
-                // Navigasi biasa saat item diklik
                 val action = ForumFragmentDirections.actionForumFragmentToPostDetailFragment(post.id)
                 findNavController().navigate(action)
             },
             onCommentIconClick = { post ->
-                // Navigasi saat ikon komentar diklik
-                // TODO: Anda perlu cara untuk mengirim sinyal "buka keyboard" ke PostDetailFragment.
-                // Cara paling mudah adalah dengan menambahkan argumen baru di nav_graph.
                 val action = ForumFragmentDirections.actionForumFragmentToPostDetailFragment(post.id)
                 findNavController().navigate(action)
-                // Untuk sementara, kita navigasi biasa dulu.
-            }
+            },
+            postRepository = postRepository
         )
     }
 
@@ -46,11 +51,25 @@ class ForumFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.appBarLayout.setExpanded(true, false)
-
         setupRecyclerView()
-        loadForumPosts()
+        loadForumPostsFromFirestore()
         setupClickListeners()
+
+        binding.etSearchForum.addTextChangedListener(object : TextWatcher {
+            override fun afterTextChanged(s: Editable?) {
+                val query = s.toString().trim()
+                val filteredList = if (query.isNotEmpty()) {
+                    allPosts.filter { it.caption.contains(query, ignoreCase = true) }
+                } else {
+                    allPosts
+                }
+                postAdapter.submitList(filteredList)
+            }
+
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+        })
+
     }
 
     private fun setupRecyclerView() {
@@ -60,16 +79,22 @@ class ForumFragment : Fragment() {
         }
     }
 
-    private fun loadForumPosts() {
-        // Dummy data
-        val dummyFypPosts = listOf(
-            Post("p3", "uid2", "amelianah", "url", "19 July 2025", "url", "My first post here, hello!", 54, 27),
-            Post("p1", "uid1", "nathaniaaa", "url", "18 July 2025", "url", "Look at my new plant!!", 12, 3, true),
-            Post("p2", "uid1", "nathaniaaa", "url", "17 July 2025", "url", "My second plant here!", 25, 5),
-            Post("p4", "uid3", "gemini", "url", "16 July 2025", "url", "Just sharing my new garden setup.", 102, 15)
-        )
-        postAdapter.submitList(dummyFypPosts)
+    private fun loadForumPostsFromFirestore() {
+        FirebaseFirestore.getInstance()
+            .collection("posts")
+            .orderBy("postDate", Query.Direction.DESCENDING)
+            .get()
+            .addOnSuccessListener { snapshot ->
+                val posts = snapshot.toObjects(Post::class.java)
+                allPosts = posts // CACHE
+                postAdapter.submitList(posts)
+            }
+            .addOnFailureListener { e ->
+                Toast.makeText(requireContext(), "Gagal memuat post: ${e.message}", Toast.LENGTH_SHORT).show()
+            }
     }
+
+
 
     private fun setupClickListeners() {
         binding.fabAddPostForum.setOnClickListener {
@@ -77,7 +102,8 @@ class ForumFragment : Fragment() {
         }
 
         binding.includedToolbar.ivToolbarAvatar.setOnClickListener {
-            activity?.findViewById<BottomNavigationView>(R.id.bottom_navigation_view)?.selectedItemId = R.id.profileFragment
+            activity?.findViewById<BottomNavigationView>(R.id.bottom_navigation_view)?.selectedItemId =
+                R.id.profileFragment
         }
 
         binding.includedToolbar.btnToolbarSearch.setOnClickListener {
@@ -87,7 +113,6 @@ class ForumFragment : Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
-        binding.rvForumPosts.adapter = null
         _binding = null
     }
 }

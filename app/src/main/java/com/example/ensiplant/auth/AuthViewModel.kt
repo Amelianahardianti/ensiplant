@@ -22,14 +22,4 @@ class AuthViewModel(private val repository: AuthRepository) : ViewModel() {
         }
     }
 
-    fun signInWithGoogle(token: String) {
-        repository.googleSignInWithFirebase(token) {
-            isAuthenticated.postValue(it)
-        }
-    }
-
-    fun logout() {
-        repository.logout()
-        isAuthenticated.postValue(false)
-    }
 }

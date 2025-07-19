@@ -15,15 +15,21 @@ import com.example.ensiplant.databinding.FragmentProfileBinding
 import com.example.ensiplant.auth.LoginActivity
 import com.example.ensiplant.ui.forum.PostAdapter
 import com.google.firebase.auth.FirebaseAuth
+import com.example.ensiplant.data.repository.PostRepository
+import com.google.firebase.firestore.FirebaseFirestore
+import kotlinx.coroutines.tasks.await
+
+
 
 class ProfileFragment : Fragment() {
 
     private var _binding: FragmentProfileBinding? = null
     private val binding get() = _binding!!
 
-    // Menggunakan PostAdapter yang sudah diperbaiki dengan dua click listener
+
     private val postAdapter by lazy {
         PostAdapter(
+            postRepository = PostRepository(),
             onPostClick = { post ->
                 val action = ProfileFragmentDirections.actionProfileFragmentToPostDetailFragment(
                     postId = post.id,
@@ -40,6 +46,7 @@ class ProfileFragment : Fragment() {
             }
         )
     }
+
 
     private lateinit var firebaseAuth: FirebaseAuth
     // Menggunakan ViewModel untuk mengambil data
@@ -59,23 +66,30 @@ class ProfileFragment : Fragment() {
 
         firebaseAuth = FirebaseAuth.getInstance()
 
-        // Pengecekan penting: jika user belum login, arahkan ke LoginActivity
+
         if (firebaseAuth.currentUser == null) {
             val intent = Intent(requireContext(), LoginActivity::class.java)
             intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
             startActivity(intent)
             activity?.finish()
-            return // Hentikan eksekusi lebih lanjut
+            return
         }
 
-        // Memulai proses memuat data
-        profileViewModel.loadUserData()
 
-        // Setup tampilan
+        profileViewModel.loadUserPosts()
+
+        profileViewModel.userPosts.observe(viewLifecycleOwner) { posts ->
+            postAdapter.submitList(posts)
+        }
+
+
+
         setupRecyclerView()
         loadProfileData()
         loadUserPosts()
         setupClickListeners()
+        profileViewModel.loadUserData()
+
     }
 
     private fun setupRecyclerView() {
@@ -86,13 +100,13 @@ class ProfileFragment : Fragment() {
     }
 
     private fun loadProfileData() {
-        // Mengamati perubahan data dari ViewModel
+
         profileViewModel.userData.observe(viewLifecycleOwner) { user ->
             binding.tvProfileUsername.text = user.username
             binding.tvProfileEmail.text = user.email
             binding.tvLocation.text = user.location ?: "Belum diisi"
 
-            // Logika untuk menampilkan avatar (contoh)
+
             val avatarName = user.avatar ?: "avatar_default"
             val resId = resources.getIdentifier(
                 avatarName.substringBefore("."),
@@ -104,13 +118,15 @@ class ProfileFragment : Fragment() {
     }
 
     private fun loadUserPosts() {
-        // TODO (Untuk BE): Panggil fungsi di ViewModel untuk mengambil postingan user ini
-        val dummyPosts = listOf(
-            Post("p1", "uid1", "nathaniaaa", "url", "17 July 2025", "url", "Look at my new plant!!", 12, 3, true),
-            Post("p2", "uid1", "nathaniaaa", "url", "16 July 2025", "url", "My second plant here!", 25, 5)
-        )
-        postAdapter.submitList(dummyPosts)
+        profileViewModel.loadUserPosts()
+
+        profileViewModel.userPosts.observe(viewLifecycleOwner) { posts ->
+            postAdapter.submitList(posts)
+        }
     }
+
+
+
 
     private fun setupClickListeners() {
         binding.btnEditProfile.setOnClickListener {
@@ -124,7 +140,16 @@ class ProfileFragment : Fragment() {
         binding.btnLogout.setOnClickListener {
             performLogout()
         }
+
+        profileViewModel.loadUserPosts()
+
+        profileViewModel.userPosts.observe(viewLifecycleOwner) { posts ->
+            postAdapter.submitList(posts)
+        }
+
     }
+
+
 
     private fun performLogout() {
         firebaseAuth.signOut()
@@ -134,6 +159,22 @@ class ProfileFragment : Fragment() {
         startActivity(intent)
         activity?.finish()
     }
+
+    suspend fun getPostsByUserId(uid: String): List<Post> {
+        val db = FirebaseFirestore.getInstance()
+        val postCollection = db.collection("posts")
+
+        return try {
+            val snapshot = postCollection
+                .whereEqualTo("uid", uid)
+                .get()
+                .await()
+            snapshot.toObjects(Post::class.java)
+        } catch (e: Exception) {
+            emptyList()
+        }
+    }
+
 
     override fun onDestroyView() {
         super.onDestroyView()

@@ -1,6 +1,7 @@
 package com.example.ensiplant.ui.forum
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
@@ -8,17 +9,27 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.ensiplant.R
 import com.example.ensiplant.data.model.forum.Post
 import com.example.ensiplant.databinding.ItemForumPostBinding
-// import com.bumptech.glide.Glide
+import com.bumptech.glide.Glide
+import com.google.firebase.auth.FirebaseAuth
+import com.example.ensiplant.data.repository.PostRepository
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+
 
 // DIUBAH: Constructor sekarang menerima dua jenis click listener
 class PostAdapter(
+    private val postRepository: PostRepository,
     private val onPostClick: (Post) -> Unit,
     private val onCommentIconClick: (Post) -> Unit
 ) : ListAdapter<Post, PostAdapter.PostViewHolder>(POST_COMPARATOR) {
 
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PostViewHolder {
         val binding = ItemForumPostBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return PostViewHolder(binding)
+
+
     }
 
     override fun onBindViewHolder(holder: PostViewHolder, position: Int) {
@@ -40,26 +51,60 @@ class PostAdapter(
             binding.tvLikeCount.text = post.likeCount.toString()
             binding.tvCommentCount.text = post.commentCount.toString()
 
-            // TODO (Untuk BE): Implementasikan Glide/Coil untuk memuat gambar dari URL
-            // Glide.with(itemView.context).load(post.userAvatarUrl).into(binding.ivUserAvatar)
-            // Glide.with(itemView.context).load(post.postImageUrl).into(binding.ivPostImage)
+            // Load avatar dari drawable (contoh: avatar4.jpg -> avatar4)
+            val context = itemView.context
+            val avatarName = post.avatar.substringBeforeLast(".") // misal "avatar4.jpg" -> "avatar4"
+            val avatarResId = context.resources.getIdentifier(avatarName, "drawable", context.packageName)
+
+
+
+            if (avatarResId != 0) {
+                Glide.with(context)
+                    .load(avatarResId)
+                    .into(binding.ivUserAvatar)
+            } else {
+                // fallback kalau resource tidak ditemukan
+                binding.ivUserAvatar.setImageResource(R.drawable.ic_profile)
+            }
+
+            // Load gambar post (Cloudinary)
+            if (!post.postImageUrl.isNullOrEmpty()) {
+                Glide.with(context)
+                    .load(post.postImageUrl)
+                    .placeholder(R.drawable.ic_profile)
+                    .into(binding.ivPostImage)
+            } else {
+                // Optional: sembunyikan image view kalau tidak ada gambar
+                binding.ivPostImage.visibility = View.GONE
+            }
+
 
             updateLikeIcon(post.isLikedByUser)
 
-            // Listener untuk tombol like
             binding.btnLike.setOnClickListener {
-                // TODO (Untuk BE): Panggil fungsi di ViewModel untuk handle like/unlike.
+                val userId = FirebaseAuth.getInstance().currentUser?.uid ?: return@setOnClickListener
+
                 post.isLikedByUser = !post.isLikedByUser
                 if (post.isLikedByUser) post.likeCount++ else post.likeCount--
                 updateLikeIcon(post.isLikedByUser)
                 binding.tvLikeCount.text = post.likeCount.toString()
+
+                // INI yang penting: panggil suspend function di dalam coroutine
+                CoroutineScope(Dispatchers.IO).launch {
+                    postRepository.toggleLike(post.id, userId)
+                }
             }
 
-            // DIUBAH: Menambahkan listener khusus untuk ikon komentar
+
+
             binding.btnComment.setOnClickListener {
                 onCommentIconClick(post)
             }
+
         }
+
+
+
 
         private fun updateLikeIcon(isLiked: Boolean) {
             if (isLiked) {
