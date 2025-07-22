@@ -9,6 +9,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -19,8 +20,10 @@ import com.example.ensiplant.databinding.FragmentCreatePostBinding
 import com.example.ensiplant.network.RetrofitClient
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
+import kotlinx.coroutines.withContext
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -34,10 +37,19 @@ class CreatePostFragment : Fragment() {
     private var _binding: FragmentCreatePostBinding? = null
     private val binding get() = _binding!!
     private var selectedMediaUri: Uri? = null
-    private var isVideo: Boolean = false
 
-    companion object {
-        private const val REQUEST_CODE_MEDIA = 101
+    private val mediaLauncher = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        if (result.resultCode == Activity.RESULT_OK) {
+            val data: Intent? = result.data
+            selectedMediaUri = data?.data
+            selectedMediaUri?.let { uri ->
+                binding.layoutPlaceholder.visibility = View.GONE
+                binding.ivPreviewImage.visibility = View.VISIBLE
+                binding.ivPreviewImage.setImageURI(uri)
+            }
+        }
     }
 
     override fun onCreateView(
@@ -50,46 +62,41 @@ class CreatePostFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        setupClickListeners()
+    }
 
+    private fun setupClickListeners() {
         binding.btnCloseCreate.setOnClickListener {
             findNavController().popBackStack()
         }
-
-        binding.ivAddImage.setOnClickListener {
+        binding.layoutPlaceholder.setOnClickListener {
+            // REVISI: Intent hanya untuk memilih gambar
             val intent = Intent(Intent.ACTION_GET_CONTENT).apply {
-                type = "*/*"
-                putExtra(Intent.EXTRA_MIME_TYPES, arrayOf("image/*", "video/*"))
+                type = "image/*"
             }
-            val chooser = Intent.createChooser(intent, "Pilih Gambar atau Video")
-            startActivityForResult(chooser, REQUEST_CODE_MEDIA)
+            val chooser = Intent.createChooser(intent, "Pilih Gambar")
+            mediaLauncher.launch(chooser)
         }
-
         binding.btnPost.setOnClickListener {
             submitPost()
         }
     }
 
-    private suspend fun uploadImageToCloudinary(context: Context, uri: Uri): String? {
-        return try {
-            val contentResolver = context.contentResolver
-            val inputStream = contentResolver.openInputStream(uri)
-            val bytes = inputStream?.readBytes()
-            inputStream?.close()
+    private suspend fun uploadImageToCloudinary(context: Context, uri: Uri): String? = withContext(Dispatchers.IO) {
+        try {
+            context.contentResolver.openInputStream(uri)?.use { inputStream ->
+                val bytes = inputStream.readBytes()
+                val requestFile = bytes.toRequestBody("image/*".toMediaTypeOrNull())
+                val filePart = MultipartBody.Part.createFormData("file", "image.jpg", requestFile)
+                val uploadPreset = "ensiplant_preset".toRequestBody("text/plain".toMediaTypeOrNull())
 
-            val requestFile = bytes?.toRequestBody("image/*".toMediaTypeOrNull())
-            val filePart = MultipartBody.Part.createFormData(
-                "file",
-                "image.jpg",
-                requestFile!!
-            )
+                val response = RetrofitClient.instance.uploadImage(filePart, uploadPreset)
 
-            val uploadPreset = "ensiplant_preset".toRequestBody("text/plain".toMediaTypeOrNull())
-            val response = RetrofitClient.instance.uploadImage(filePart, uploadPreset)
-
-            if (response.isSuccessful) {
-                response.body()?.secure_url
-            } else {
-                null
+                if (response.isSuccessful) {
+                    response.body()?.secure_url
+                } else {
+                    null
+                }
             }
         } catch (e: Exception) {
             e.printStackTrace()
@@ -97,82 +104,70 @@ class CreatePostFragment : Fragment() {
         }
     }
 
-
     private fun submitPost() {
         val caption = binding.etCaption.text.toString().trim()
         val mediaUri = selectedMediaUri
+        val user = FirebaseAuth.getInstance().currentUser
 
         if (caption.isEmpty()) {
             Toast.makeText(requireContext(), "Caption tidak boleh kosong", Toast.LENGTH_SHORT).show()
             return
         }
+        if (user == null) {
+            Toast.makeText(requireContext(), "Anda harus login untuk membuat post", Toast.LENGTH_SHORT).show()
+            return
+        }
 
-        val user = FirebaseAuth.getInstance().currentUser ?: return
-        val uid = user.uid
+        showLoading(true)
 
         lifecycleScope.launch {
             try {
-                val userDoc = FirebaseFirestore.getInstance().collection("users").document(uid).get().await()
-                val username = userDoc.getString("username") ?: "Anonymous"
-                val avatarUrl = userDoc.getString("avatar") ?: ""
+                val postResult = withContext(Dispatchers.IO) {
+                    val userDoc = FirebaseFirestore.getInstance().collection("users").document(user.uid).get().await()
+                    val username = userDoc.getString("username") ?: "Anonymous"
+                    val avatarUrl = userDoc.getString("avatar") ?: ""
 
-                // Upload media jika ada
-                val mediaUrl = if (mediaUri != null) {
-                    uploadImageToCloudinary(requireContext(), mediaUri)
-                } else {
-                    null
+                    val mediaUrl = if (mediaUri != null) {
+                        uploadImageToCloudinary(requireContext(), mediaUri)
+                    } else {
+                        null
+                    }
+
+                    val postId = UUID.randomUUID().toString()
+                    val currentDateTime = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(Date())
+
+                    // REVISI: isVideo di-set false secara permanen
+                    val newPost = Post(
+                        id = postId, uid = user.uid, username = username, avatar = avatarUrl,
+                        postDate = currentDateTime, postImageUrl = mediaUrl, caption = caption,
+                        likeCount = 0, commentCount = 0, isVideo = false
+                    )
+                    PostRepository().createPost(newPost)
                 }
 
-                val postId = UUID.randomUUID().toString()
-                val currentDateTime = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(Date())
-
-                val newPost = Post(
-                    id = postId,
-                    uid = uid,
-                    username = username,
-                    avatar = avatarUrl,
-                    postDate = currentDateTime,
-                    postImageUrl = mediaUrl, // boleh null
-                    caption = caption,
-                    likeCount = 0,
-                    commentCount = 0,
-                    isVideo = false
-                )
-
-                val result = PostRepository().createPost(newPost)
-                if (result) {
+                if (postResult) {
                     Toast.makeText(requireContext(), "Post berhasil dikirim!", Toast.LENGTH_SHORT).show()
                     findNavController().popBackStack()
                 } else {
                     Toast.makeText(requireContext(), "Gagal kirim post", Toast.LENGTH_SHORT).show()
                 }
+
             } catch (e: Exception) {
                 Toast.makeText(requireContext(), "Error: ${e.message}", Toast.LENGTH_SHORT).show()
+            } finally {
+                showLoading(false)
             }
         }
     }
 
+
+    private fun showLoading(isLoading: Boolean) {
+        binding.progressBarCreate.visibility = if (isLoading) View.VISIBLE else View.GONE
+        binding.btnPost.isEnabled = !isLoading
+    }
 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-
-        if (requestCode == REQUEST_CODE_MEDIA && resultCode == Activity.RESULT_OK) {
-            selectedMediaUri = data?.data
-            selectedMediaUri?.let { uri ->
-                val mimeType = requireContext().contentResolver.getType(uri)
-                isVideo = mimeType?.startsWith("video/") == true
-
-                if (mimeType?.startsWith("image/") == true) {
-                    binding.ivAddImage.setImageURI(uri)
-                } else if (mimeType?.startsWith("video/") == true) {
-                    binding.ivAddImage.setImageResource(R.drawable.add_image)
-                }
-            }
-        }
     }
 }

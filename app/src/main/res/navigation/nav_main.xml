@@ -13,7 +13,11 @@
         tools:layout="@layout/fragment_forum">
         <action
             android:id="@+id/action_forumFragment_to_createPostFragment"
-            app:destination="@id/createPostFragment" />
+            app:destination="@id/createPostFragment"
+            app:enterAnim="@animator/slide_in_right"
+            app:exitAnim="@animator/slide_out_left"
+            app:popEnterAnim="@animator/slide_in_left"
+            app:popExitAnim="@animator/slide_out_right" />
 
         <action
             android:id="@+id/action_forumFragment_to_profileFragment"
@@ -21,7 +25,11 @@
 
         <action
             android:id="@+id/action_forumFragment_to_postDetailFragment"
-            app:destination="@id/postDetailFragment" />
+            app:destination="@id/postDetailFragment"
+            app:enterAnim="@animator/slide_in_right"
+            app:exitAnim="@animator/slide_out_left"
+            app:popEnterAnim="@animator/slide_in_left"
+            app:popExitAnim="@animator/slide_out_right" />
     </fragment>
 
     <!-- ensiklopedia -->
@@ -32,7 +40,11 @@
         tools:layout="@layout/fragment_ensiklopedia">
         <action
             android:id="@+id/action_ensiklopediaFragment_to_plantDetailFragment"
-            app:destination="@id/plantDetailFragment" />
+            app:destination="@id/plantDetailFragment"
+            app:enterAnim="@animator/slide_in_right"
+            app:exitAnim="@animator/slide_out_left"
+            app:popEnterAnim="@animator/slide_in_left"
+            app:popExitAnim="@animator/slide_out_right" />
     </fragment>
 
     <!-- profile -->
@@ -43,13 +55,25 @@
         tools:layout="@layout/fragment_profile">
         <action
             android:id="@+id/action_profileFragment_to_editProfileFragment"
-            app:destination="@id/editProfileFragment" />
+            app:destination="@id/editProfileFragment"
+            app:enterAnim="@animator/slide_in_right"
+            app:exitAnim="@animator/slide_out_left"
+            app:popEnterAnim="@animator/slide_in_left"
+            app:popExitAnim="@animator/slide_out_right" />
         <action
             android:id="@+id/action_profileFragment_to_createPostFragment"
-            app:destination="@id/createPostFragment" />
+            app:destination="@id/createPostFragment"
+            app:enterAnim="@animator/slide_in_right"
+            app:exitAnim="@animator/slide_out_left"
+            app:popEnterAnim="@animator/slide_in_left"
+            app:popExitAnim="@animator/slide_out_right" />
         <action
             android:id="@+id/action_ProfileFragment_to_PostDetailFragment"
-            app:destination="@id/postDetailFragment" />
+            app:destination="@id/postDetailFragment"
+            app:enterAnim="@animator/slide_in_right"
+            app:exitAnim="@animator/slide_out_left"
+            app:popEnterAnim="@animator/slide_in_left"
+            app:popExitAnim="@animator/slide_out_right" />
     </fragment>
 
     <!-- detail plant -->

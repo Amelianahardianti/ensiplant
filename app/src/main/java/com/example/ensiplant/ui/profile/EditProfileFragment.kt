@@ -15,9 +15,10 @@ class EditProfileFragment : Fragment() {
 
     private var _binding: FragmentEditProfileBinding? = null
     private val binding get() = _binding!!
+
     private val profileViewModel: ProfileViewModel by viewModels()
 
-    private var selectedAvatar: String = "avatar_1.jpg" // default avatar
+    private var selectedAvatar: String = "avatar_1.jpg"
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -30,56 +31,57 @@ class EditProfileFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        profileViewModel.loadUserData()
+        view.post {
+            profileViewModel.loadUserData()
 
-        profileViewModel.userData.observe(viewLifecycleOwner) { user ->
-            binding.etEditUsername.setText(user.username)
-            binding.etEditEmail.setText(user.email)
-            binding.etEditCity.setText(user.location)
+            profileViewModel.userData.observe(viewLifecycleOwner) { user ->
+                binding.etEditUsername.setText(user.username)
+                binding.etEditEmail.setText(user.email)
+                binding.etEditCity.setText(user.location)
 
-            selectedAvatar = user.avatar ?: "avatar_1.jpg"
-            val avatarName = selectedAvatar.substringBefore(".")
-            val resId = resources.getIdentifier(
-                avatarName,
-                "drawable",
-                requireContext().packageName
-            )
-            binding.ivEditProfilePicture.setImageResource(resId)
-        }
-
-        binding.btnCloseEdit.setOnClickListener {
-            findNavController().popBackStack()
-        }
-
-        binding.ivEditAvatar.setOnClickListener {
-            val picker = AvatarPickerBottomSheet { avatarName ->
-                selectedAvatar = avatarName.substringBefore(".").replace("_", "") // FIXED ✅
+                selectedAvatar = user.avatar ?: "avatar_1.jpg"
+                val avatarName = selectedAvatar.substringBefore(".")
                 val resId = resources.getIdentifier(
-                    selectedAvatar,
+                    avatarName,
                     "drawable",
                     requireContext().packageName
                 )
                 binding.ivEditProfilePicture.setImageResource(resId)
             }
-            picker.show(parentFragmentManager, "AvatarPicker")
-        }
 
-
-        binding.btnUpdateProfile.setOnClickListener {
-            val newUsername = binding.etEditUsername.text.toString().trim()
-            val newLocation = binding.etEditCity.text.toString().trim()
-
-            if (newUsername.isEmpty() || newLocation.isEmpty()) {
-                Toast.makeText(requireContext(), "Isi semua field!", Toast.LENGTH_SHORT).show()
-                return@setOnClickListener
+            binding.btnCloseEdit.setOnClickListener {
+                findNavController().popBackStack()
             }
 
-            profileViewModel.updateUserProfile(newUsername, newLocation, selectedAvatar) { success ->
-                if (success) {
-                    Toast.makeText(requireContext(), "Profil berhasil diperbarui", Toast.LENGTH_SHORT).show()
-                    findNavController().popBackStack()
-                } else {
-                    Toast.makeText(requireContext(), "Gagal memperbarui profil", Toast.LENGTH_SHORT).show()
+            binding.ivEditAvatar.setOnClickListener {
+                val picker = AvatarPickerBottomSheet { avatarName ->
+                    selectedAvatar = avatarName.substringBefore(".").replace("_", "")
+                    val resId = resources.getIdentifier(
+                        selectedAvatar,
+                        "drawable",
+                        requireContext().packageName
+                    )
+                    binding.ivEditProfilePicture.setImageResource(resId)
+                }
+                picker.show(parentFragmentManager, "AvatarPicker")
+            }
+
+            binding.btnUpdateProfile.setOnClickListener {
+                val newUsername = binding.etEditUsername.text.toString().trim()
+                val newLocation = binding.etEditCity.text.toString().trim()
+
+                if (newUsername.isEmpty() || newLocation.isEmpty()) {
+                    Toast.makeText(requireContext(), "Isi semua field!", Toast.LENGTH_SHORT).show()
+                    return@setOnClickListener
+                }
+
+                profileViewModel.updateUserProfile(newUsername, newLocation, selectedAvatar) { success ->
+                    if (success) {
+                        Toast.makeText(requireContext(), "Profil berhasil diperbarui", Toast.LENGTH_SHORT).show()
+                        findNavController().popBackStack()
+                    } else {
+                        Toast.makeText(requireContext(), "Gagal memperbarui profil", Toast.LENGTH_SHORT).show()
+                    }
                 }
             }
         }

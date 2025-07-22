@@ -12,11 +12,13 @@
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:scaleType="centerCrop"
+        android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:shapeAppearanceOverlay="@style/ShapeAppearance.App.CircleImageView"
-        tools:src="@tools:sample/avatars" />
+        tools:src="@tools:sample/avatars"
+        tools:visibility="visible"/>
 
     <ImageView
         android:id="@+id/iv_toolbar_plant_icon"

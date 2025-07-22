@@ -127,9 +127,9 @@
         android:layout_marginEnd="16dp"
         android:background="#F2F2F2"
         android:fontFamily="@font/poppins_bold"
-        android:padding="16dp"
+        android:padding="8dp"
         android:text="@string/posted"
-        android:textColor="@android:color/black"
+        android:textColor="#999999"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tv_location" />
@@ -137,6 +137,7 @@
     <!-- Daftar Postingan Pengguna -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_user_posts"
+        android:layout_marginTop="16dp"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:clipToPadding="false"
@@ -154,7 +155,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="24dp"
-        android:backgroundTint="#A0C878"
+        android:backgroundTint="#40744D"
         android:src="@drawable/ic_add"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -12,14 +13,12 @@ import com.example.ensiplant.data.model.Plant
 import com.example.ensiplant.databinding.FragmentEnsiklopediaBinding
 import com.google.firebase.Firebase
 import com.google.firebase.firestore.firestore
-import androidx.core.widget.doOnTextChanged
 
 class EnsiklopediaFragment : Fragment() {
 
     private var _binding: FragmentEnsiklopediaBinding? = null
     private val binding get() = _binding!!
 
-    // Inisialisasi adapter untuk RecyclerView
     private val plantAdapter by lazy { PlantAdapter() }
 
     override fun onCreateView(
@@ -33,20 +32,18 @@ class EnsiklopediaFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        view.post {
+            binding.etSearch.doOnTextChanged { text, _, _, _ ->
+                plantAdapter.filter(text.toString())
+            }
 
-        binding.etSearch.doOnTextChanged { text, _, _, _ ->
-            plantAdapter.filter(text.toString())
+            setupRecyclerView()
+            loadPlantsFromFirestore()
+            setupItemClick()
         }
-
-
-
-        setupRecyclerView()
-        loadPlantsFromFirestore()
-        setupItemClick()
     }
 
     private fun setupRecyclerView() {
-        // Mengatur RecyclerView
         binding.rvPlants.apply {
             layoutManager = LinearLayoutManager(context)
             adapter = plantAdapter
@@ -55,7 +52,6 @@ class EnsiklopediaFragment : Fragment() {
 
     private fun loadPlantsFromFirestore() {
         val db = Firebase.firestore
-
         db.collection("plants")
             .get()
             .addOnSuccessListener { result ->
@@ -76,13 +72,9 @@ class EnsiklopediaFragment : Fragment() {
             }
     }
 
-
     private fun setupItemClick() {
-        // Menambahkan aksi saat salah satu item tanaman di klik
         plantAdapter.setOnItemClickCallback { plant ->
-            // Action untuk pindah ke halaman detail sambil mengirim data plant
             val action = EnsiklopediaFragmentDirections.actionEnsiklopediaFragmentToPlantDetailFragment(plant)
-            // Menjalankan navigasi
             findNavController().navigate(action)
         }
     }

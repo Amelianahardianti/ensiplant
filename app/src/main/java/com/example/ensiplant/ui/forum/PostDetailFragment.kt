@@ -29,7 +29,6 @@ class PostDetailFragment : Fragment() {
     private val binding get() = _binding!!
     private var replyToCommentId: String? = null
 
-
     private val commentAdapter by lazy {
         CommentAdapter { comment ->
             focusCommentInput()
@@ -51,31 +50,33 @@ class PostDetailFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        setupToolbar()
-        setupCommentsRecyclerView()
-        setupClickListeners()
-        loadData()
-        fixMissingAvatarsInComments()
+        // DIUBAH: Semua pekerjaan berat ditunda menggunakan view.post
+        view.post {
+            setupToolbar()
+            setupCommentsRecyclerView()
+            setupClickListeners()
+            loadData()
+            fixMissingAvatarsInComments()
 
-        if (args.openKeyboard) {
-            focusCommentInput()
+            if (args.openKeyboard) {
+                focusCommentInput()
+            }
+
+            val uid = FirebaseAuth.getInstance().currentUser?.uid
+            if (uid != null) {
+                FirebaseFirestore.getInstance().collection("users").document(uid)
+                    .get()
+                    .addOnSuccessListener { doc ->
+                        val avatarName = doc.getString("avatar") ?: "avatar1"
+                        val avatarResId = resources.getIdentifier(avatarName, "drawable", requireContext().packageName)
+
+                        Glide.with(requireContext())
+                            .load(avatarResId)
+                            .placeholder(R.drawable.ic_profile)
+                            .into(binding.ivMyAvatar)
+                    }
+            }
         }
-
-        val uid = FirebaseAuth.getInstance().currentUser?.uid
-        if (uid != null) {
-            FirebaseFirestore.getInstance().collection("users").document(uid)
-                .get()
-                .addOnSuccessListener { doc ->
-                    val avatarName = doc.getString("avatar") ?: "avatar1"
-                    val avatarResId = resources.getIdentifier(avatarName, "drawable", requireContext().packageName)
-
-                    Glide.with(requireContext())
-                        .load(avatarResId)
-                        .placeholder(R.drawable.ic_profile)
-                        .into(binding.ivMyAvatar)
-                }
-        }
-
     }
 
     private fun setupToolbar() {
@@ -114,22 +115,18 @@ class PostDetailFragment : Fragment() {
 
     private fun showPostDetail(post: Post) {
         val postBinding = binding.includedPost
-
-        // Set basic info
         postBinding.tvUsername.text = post.username
         postBinding.tvPostDate.text = post.postDate
         postBinding.tvPostCaption.text = post.caption
         postBinding.tvLikeCount.text = post.likeCount.toString()
         postBinding.tvCommentCount.text = post.commentCount.toString()
 
-        // Ambil dan load avatar preset
         val avatarResId = getAvatarResId(post.avatar)
         Glide.with(requireContext())
             .load(avatarResId)
             .placeholder(R.drawable.ic_profile)
             .into(postBinding.ivUserAvatar)
 
-        // Load gambar post (jika ada)
         if (!post.postImageUrl.isNullOrEmpty()) {
             postBinding.ivPostImage.visibility = View.VISIBLE
             Glide.with(requireContext())
@@ -139,34 +136,24 @@ class PostDetailFragment : Fragment() {
             postBinding.ivPostImage.visibility = View.GONE
         }
 
-        // Set ikon like
         updateLikeIcon(post.isLikedByUser)
 
-        // Handle klik like
         postBinding.btnLike.setOnClickListener {
             val db = FirebaseFirestore.getInstance()
             val postRef = db.collection("posts").document(args.postId)
-
             post.isLikedByUser = !post.isLikedByUser
             post.likeCount += if (post.isLikedByUser) 1 else -1
-
             updateLikeIcon(post.isLikedByUser)
             postBinding.tvLikeCount.text = post.likeCount.toString()
-
             postRef.update(
-                mapOf(
-                    "likeCount" to post.likeCount,
-                    "isLikedByUser" to post.isLikedByUser
-                )
+                mapOf("likeCount" to post.likeCount, "isLikedByUser" to post.isLikedByUser)
             ).addOnFailureListener {
                 Toast.makeText(context, "Gagal update like", Toast.LENGTH_SHORT).show()
             }
         }
 
-        // Matikan klik supaya post-nya gak kebuka ulang
         postBinding.root.setOnClickListener(null)
     }
-
 
     private fun sendComment() {
         val commentText = binding.etAddComment.text.toString().trim()
@@ -178,16 +165,11 @@ class PostDetailFragment : Fragment() {
             return
         }
 
-
-
         val db = FirebaseFirestore.getInstance()
-
-        // Ambil data user yang login (username & avatar preset)
         db.collection("users").document(currentUser.uid).get()
             .addOnSuccessListener { document ->
                 val username = document.getString("username") ?: "Anonim"
-                val avatar = document.getString("avatar") ?: "avatar1"  // INI HARUS ADA DI DOCUMENT USER
-
+                val avatar = document.getString("avatar") ?: "avatar1"
                 val commentMap = mapOf(
                     "postId" to args.postId,
                     "uid" to currentUser.uid,
@@ -195,34 +177,27 @@ class PostDetailFragment : Fragment() {
                     "avatar" to avatar,
                     "text" to commentText,
                     "timestamp" to System.currentTimeMillis(),
-                    "parentCommentId" to replyToCommentId,  // bisa null kalau bukan reply
+                    "parentCommentId" to replyToCommentId,
                     "isEdited" to false,
                     "likeCount" to 0,
                     "isLikedByUser" to false
                 )
-
-
                 db.collection("comments")
                     .add(commentMap)
                     .addOnSuccessListener {
-                        // Update comment count
                         val postRef = db.collection("posts").document(args.postId)
                         db.runTransaction { transaction ->
                             val snapshot = transaction.get(postRef)
                             val currentCount = snapshot.getLong("commentCount") ?: 0
                             transaction.update(postRef, "commentCount", currentCount + 1)
                         }
-
                         binding.etAddComment.setText("")
                         focusCommentInput()
-
                         lifecycleScope.launch {
                             loadComments(args.postId)
                         }
-
                         replyToCommentId = null
                         binding.etAddComment.hint = "Tambahkan komentar..."
-
                     }
                     .addOnFailureListener {
                         Toast.makeText(context, "Gagal menyimpan komentar", Toast.LENGTH_SHORT).show()
@@ -233,8 +208,6 @@ class PostDetailFragment : Fragment() {
             }
     }
 
-
-
     private fun loadComments(postId: String) {
         val db = FirebaseFirestore.getInstance()
         db.collection("comments")
@@ -242,12 +215,8 @@ class PostDetailFragment : Fragment() {
             .orderBy("timestamp")
             .addSnapshotListener { snapshot, e ->
                 if (e != null || snapshot == null) return@addSnapshotListener
-
                 val allComments = snapshot.documents.mapNotNull { it.toObject(Comment::class.java) }
-
-                // Urutkan komen dengan replynya (threaded flat structure)
                 val structuredComments = buildThreadedList(allComments)
-
                 commentAdapter.submitList(structuredComments)
             }
     }
@@ -255,30 +224,21 @@ class PostDetailFragment : Fragment() {
     private fun buildThreadedList(comments: List<Comment>): List<Comment> {
         val commentMap = comments.associateBy { it.id }
         val groupedReplies = comments.groupBy { it.parentCommentId }
-
         val result = mutableListOf<Comment>()
-
-        // Fungsi rekursif untuk menyusun thread
         fun addThread(comment: Comment) {
             result.add(comment)
             groupedReplies[comment.id]?.forEach { reply ->
                 addThread(reply)
             }
         }
-
-        // Mulai dari top-level comment (parentCommentId == null)
         comments.filter { it.parentCommentId.isNullOrEmpty() }.forEach {
             addThread(it)
         }
-
         return result
     }
 
-
-
     private fun fixMissingAvatarsInComments() {
         val db = FirebaseFirestore.getInstance()
-
         db.collection("comments")
             .get()
             .addOnSuccessListener { snapshot ->
@@ -300,7 +260,6 @@ class PostDetailFragment : Fragment() {
             }
     }
 
-
     private fun updateLikeIcon(isLiked: Boolean) {
         val iconRes = if (isLiked) R.drawable.ic_like_active else R.drawable.ic_like_inactive
         binding.includedPost.btnLike.setImageResource(iconRes)
@@ -310,7 +269,6 @@ class PostDetailFragment : Fragment() {
         binding.etAddComment.setOnClickListener {
             focusCommentInput()
         }
-
         binding.btnSendComment.setOnClickListener {
             sendComment()
         }
@@ -327,7 +285,7 @@ class PostDetailFragment : Fragment() {
         _binding = null
     }
 
-    private fun getAvatarResId(avatarName: String): Int {
+    private fun getAvatarResId(avatarName: String?): Int {
         return when (avatarName) {
             "avatar1" -> R.drawable.avatar1
             "avatar2" -> R.drawable.avatar2
@@ -335,8 +293,7 @@ class PostDetailFragment : Fragment() {
             "avatar4" -> R.drawable.avatar4
             "avatar5" -> R.drawable.avatar5
             "avatar6" -> R.drawable.avatar6
-            else -> R.drawable.ic_profile // fallback default
+            else -> R.drawable.ic_profile
         }
     }
-
 }

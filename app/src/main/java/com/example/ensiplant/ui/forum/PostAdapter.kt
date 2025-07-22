@@ -17,7 +17,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 
-// DIUBAH: Constructor sekarang menerima dua jenis click listener
 class PostAdapter(
     private val postRepository: PostRepository,
     private val onPostClick: (Post) -> Unit,

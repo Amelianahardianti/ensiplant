@@ -26,28 +26,27 @@ class PlantDetailFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.btnClose.setOnClickListener {
-            findNavController().popBackStack()
+        view.post {
+            binding.btnClose.setOnClickListener {
+                findNavController().popBackStack()
+            }
+
+            val plant = PlantDetailFragmentArgs.fromBundle(requireArguments()).plant
+
+            // Set data ke UI
+            binding.tvDetailPlantName.text = plant.nama
+            binding.tvDetailLatinName.text = plant.latin
+            binding.tvDetailMetadata.text = plant.timestamp ?: ""
+            Log.d("DEBUG_PLANT_DETAIL", "Deskripsi: ${plant.deskripsi}")
+            binding.tvDetailDescription.text = plant.deskripsi
+
+            Log.d("DEBUG_PLANT_DETAIL", "Plant: $plant")
+
+            Glide.with(requireContext())
+                .load(plant.foto)
+                .into(binding.ivDetailPlantPhoto)
         }
-
-        val plant = PlantDetailFragmentArgs.fromBundle(requireArguments()).plant
-
-// Set data ke UI
-        binding.tvDetailPlantName.text = plant.nama
-        binding.tvDetailLatinName.text = plant.latin
-        binding.tvDetailMetadata.text = plant.timestamp ?: ""
-        Log.d("DEBUG_PLANT_DETAIL", "Deskripsi: ${plant.deskripsi}")
-        binding.tvDetailDescription.text = plant.deskripsi
-
-        Log.d("DEBUG_PLANT_DETAIL", "Plant: $plant")
-
-
-
-        Glide.with(requireContext())
-            .load(plant.foto)
-            .into(binding.ivDetailPlantPhoto)
     }
-
 
     override fun onDestroyView() {
         super.onDestroyView()

@@ -30,7 +30,7 @@
         android:layout_height="48dp"
         android:layout_marginEnd="16dp"
         android:background="?attr/selectableItemBackgroundBorderless"
-        android:src="@drawable/ic_close"
+        android:src="@drawable/ic_close_profile"
         app:layout_constraintBottom_toBottomOf="@+id/tv_header_title"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/tv_header_title" />
