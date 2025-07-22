@@ -2,6 +2,7 @@ package com.example.ensiplant
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.NavController
@@ -53,11 +54,11 @@ class MainActivity : AppCompatActivity() {
                 R.id.forumFragment,
                 R.id.encyclopediaFragment,
                 R.id.profileFragment -> {
-                    binding.bottomNavContainer.visibility = View.VISIBLE
+                    binding.cardViewBottomNav.visibility = View.VISIBLE
                 }
                 // Sembunyikan di halaman lain (detail, edit, create, dll.)
                 else -> {
-                    binding.bottomNavContainer.visibility = View.GONE
+                    binding.cardViewBottomNav.visibility = View.GONE
                 }
             }
         }
