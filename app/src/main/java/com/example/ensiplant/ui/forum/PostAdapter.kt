@@ -1,8 +1,10 @@
 package com.example.ensiplant.ui.forum
 
+import android.app.AlertDialog
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -12,9 +14,12 @@ import com.example.ensiplant.databinding.ItemForumPostBinding
 import com.bumptech.glide.Glide
 import com.google.firebase.auth.FirebaseAuth
 import com.example.ensiplant.data.repository.PostRepository
+import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
+import kotlinx.coroutines.withContext
 
 
 class PostAdapter(
@@ -108,7 +113,38 @@ class PostAdapter(
                 }
             }
 
+            binding.btnDeletePost.visibility = if (post.uid == FirebaseAuth.getInstance().currentUser?.uid) {
+                View.VISIBLE
+            } else {
+                View.GONE
+            }
 
+            binding.btnDeletePost.setOnClickListener {
+                AlertDialog.Builder(itemView.context)
+                    .setTitle("Delete Post")
+                    .setMessage("Are you sure you want to delete this post? This action cannot be undone.")
+                    .setPositiveButton("Delete") { _, _ ->
+                        CoroutineScope(Dispatchers.IO).launch {
+                            try {
+                                FirebaseFirestore.getInstance()
+                                    .collection("posts")
+                                    .document(post.id)
+                                    .delete()
+                                    .await()
+
+                                withContext(Dispatchers.Main) {
+                                    Toast.makeText(itemView.context, "Post deleted successfully.", Toast.LENGTH_SHORT).show()
+                                }
+                            } catch (e: Exception) {
+                                withContext(Dispatchers.Main) {
+                                    Toast.makeText(itemView.context, "error: ${e.message}", Toast.LENGTH_SHORT).show()
+                                }
+                            }
+                        }
+                    }
+                    .setNegativeButton("Cancel", null)
+                    .show()
+            }
 
 
 
@@ -119,7 +155,6 @@ class PostAdapter(
             }
 
         }
-
 
 
 
