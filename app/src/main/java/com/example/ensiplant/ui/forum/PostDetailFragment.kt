@@ -19,6 +19,7 @@ import com.example.ensiplant.data.model.forum.Comment
 import com.example.ensiplant.data.model.forum.Post
 import com.example.ensiplant.databinding.FragmentPostDetailBinding
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
@@ -28,6 +29,7 @@ class PostDetailFragment : Fragment() {
     private var _binding: FragmentPostDetailBinding? = null
     private val binding get() = _binding!!
     private var replyToCommentId: String? = null
+
 
     private val commentAdapter by lazy {
         CommentAdapter { comment ->
@@ -92,6 +94,8 @@ class PostDetailFragment : Fragment() {
         }
     }
 
+
+
     private fun loadData() {
         val postId = args.postId
         val db = FirebaseFirestore.getInstance()
@@ -136,24 +140,48 @@ class PostDetailFragment : Fragment() {
             postBinding.ivPostImage.visibility = View.GONE
         }
 
-        updateLikeIcon(post.isLikedByUser)
+        val currentUid = FirebaseAuth.getInstance().currentUser?.uid
+        val isLikedByCurrentUser = currentUid != null && post.likes.contains(currentUid)
+        post.isLikedByUser = isLikedByCurrentUser
+
+        updateLikeIcon(isLikedByCurrentUser)
 
         postBinding.btnLike.setOnClickListener {
+            val currentUid = FirebaseAuth.getInstance().currentUser?.uid ?: return@setOnClickListener
             val db = FirebaseFirestore.getInstance()
             val postRef = db.collection("posts").document(args.postId)
-            post.isLikedByUser = !post.isLikedByUser
-            post.likeCount += if (post.isLikedByUser) 1 else -1
+
+            val wasLiked = post.likes.contains(currentUid)
+            val updatedLikes = if (wasLiked) post.likes - currentUid else post.likes + currentUid
+            post.likes = updatedLikes
+            post.isLikedByUser = !wasLiked
+            post.likeCount += if (!wasLiked) 1 else -1
+
+            // Update UI
             updateLikeIcon(post.isLikedByUser)
             postBinding.tvLikeCount.text = post.likeCount.toString()
+
+            // Update Firestore
+            val likesUpdate = if (post.isLikedByUser) {
+                FieldValue.arrayUnion(currentUid)
+            } else {
+                FieldValue.arrayRemove(currentUid)
+            }
+
             postRef.update(
-                mapOf("likeCount" to post.likeCount, "isLikedByUser" to post.isLikedByUser)
+                mapOf(
+                    "likes" to likesUpdate,
+                    "likeCount" to post.likeCount
+                )
             ).addOnFailureListener {
                 Toast.makeText(context, "Gagal update like", Toast.LENGTH_SHORT).show()
             }
         }
 
+
         postBinding.root.setOnClickListener(null)
     }
+
 
     private fun sendComment() {
         val commentText = binding.etAddComment.text.toString().trim()

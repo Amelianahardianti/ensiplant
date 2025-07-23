@@ -125,12 +125,21 @@ class ForumFragment : Fragment() {
     }
 
     private fun loadForumPostsFromFirestore() {
+        val currentUid = FirebaseAuth.getInstance().currentUser?.uid
+
         FirebaseFirestore.getInstance()
             .collection("posts")
             .orderBy("postDate", Query.Direction.DESCENDING)
             .get()
             .addOnSuccessListener { snapshot ->
-                val posts = snapshot.toObjects(Post::class.java)
+                val posts = snapshot.documents.mapNotNull { doc ->
+                    doc.toObject(Post::class.java)?.copy(
+                        id = doc.id,
+                        likes = (doc["likes"] as? List<*>)?.mapNotNull { it as? String } ?: emptyList(),
+                        isLikedByUser = currentUid != null && (doc["likes"] as? List<*>)?.contains(currentUid) == true
+                    )
+                }
+
                 allPosts = posts
                 postAdapter.submitList(posts)
             }
@@ -138,6 +147,10 @@ class ForumFragment : Fragment() {
                 Toast.makeText(requireContext(), "Gagal memuat post: ${e.message}", Toast.LENGTH_SHORT).show()
             }
     }
+
+
+
+
 
     private fun setupClickListeners() {
         binding.fabAddPostForum.setOnClickListener {

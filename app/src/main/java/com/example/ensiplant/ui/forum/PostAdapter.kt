@@ -82,17 +82,35 @@ class PostAdapter(
 
             binding.btnLike.setOnClickListener {
                 val userId = FirebaseAuth.getInstance().currentUser?.uid ?: return@setOnClickListener
+                val wasLiked = post.likes.contains(userId)
 
-                post.isLikedByUser = !post.isLikedByUser
-                if (post.isLikedByUser) post.likeCount++ else post.likeCount--
-                updateLikeIcon(post.isLikedByUser)
-                binding.tvLikeCount.text = post.likeCount.toString()
+                // Update lokal list
+                val updatedLikes = if (wasLiked) {
+                    post.likes - userId
+                } else {
+                    post.likes + userId
+                }
 
-                // INI yang penting: panggil suspend function di dalam coroutine
+                val updatedPost = post.copy(
+                    likes = updatedLikes,
+                    isLikedByUser = !wasLiked,
+                    likeCount = if (wasLiked) post.likeCount - 1 else post.likeCount + 1
+                )
+
+                // Replace post di list
+                val currentList = currentList.toMutableList()
+                currentList[adapterPosition] = updatedPost
+                submitList(currentList)
+
+                // Firestore update async
                 CoroutineScope(Dispatchers.IO).launch {
                     postRepository.toggleLike(post.id, userId)
                 }
             }
+
+
+
+
 
 
 
