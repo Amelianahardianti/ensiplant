@@ -1,29 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
+
+    <!-- Internet permission -->
     <uses-permission android:name="android.permission.INTERNET"/>
 
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@drawable/splash"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
+        android:roundIcon="@drawable/splash"
         android:supportsRtl="true"
         android:theme="@style/Theme.Ensiplant"
         tools:targetApi="31">
 
+        <!-- Splash screen (launcher) -->
         <activity
-            android:name=".MainActivity"
+            android:name="com.example.ensiplant.ui.splash.SplashActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-    </application>
 
+        <!-- Login & Register -->
+        <activity android:name="com.example.ensiplant.auth.LoginActivity" android:exported="true" />
+
+        <activity
+            android:name="com.example.ensiplant.auth.RegisterActivity"
+            android:exported="false" />
+
+        <!-- Main Activity -->
+        <activity
+            android:name="com.example.ensiplant.MainActivity"
+            android:exported="true" />
+
+        <!-- Font preload -->
+        <meta-data
+            android:name="preloaded_fonts"
+            android:resource="@array/preloaded_fonts" />
+    </application>
 
 </manifest>

@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_main"
+    app:startDestination="@id/forumFragment">
+
+    <!-- forum -->
+    <fragment
+        android:id="@+id/forumFragment"
+        android:name="com.example.ensiplant.ui.forum.ForumFragment"
+        android:label="fragment_forum"
+        tools:layout="@layout/fragment_forum">
+        <action
+            android:id="@+id/action_forumFragment_to_createPostFragment"
+            app:destination="@id/createPostFragment"
+            app:enterAnim="@animator/slide_in_right"
+            app:exitAnim="@animator/slide_out_left"
+            app:popEnterAnim="@animator/slide_in_left"
+            app:popExitAnim="@animator/slide_out_right" />
+
+        <action
+            android:id="@+id/action_forumFragment_to_profileFragment"
+            app:destination="@id/profileFragment" />
+
+        <action
+            android:id="@+id/action_forumFragment_to_postDetailFragment"
+            app:destination="@id/postDetailFragment"
+            app:enterAnim="@animator/slide_in_right"
+            app:exitAnim="@animator/slide_out_left"
+            app:popEnterAnim="@animator/slide_in_left"
+            app:popExitAnim="@animator/slide_out_right" />
+    </fragment>
+
+    <!-- ensiklopedia -->
+    <fragment
+        android:id="@+id/encyclopediaFragment"
+        android:name="com.example.ensiplant.ui.ensiklopedia.EnsiklopediaFragment"
+        android:label="fragment_ensiklopedia"
+        tools:layout="@layout/fragment_ensiklopedia">
+        <action
+            android:id="@+id/action_ensiklopediaFragment_to_plantDetailFragment"
+            app:destination="@id/plantDetailFragment"
+            app:enterAnim="@animator/slide_in_right"
+            app:exitAnim="@animator/slide_out_left"
+            app:popEnterAnim="@animator/slide_in_left"
+            app:popExitAnim="@animator/slide_out_right" />
+    </fragment>
+
+    <!-- profile -->
+    <fragment
+        android:id="@+id/profileFragment"
+        android:name="com.example.ensiplant.ui.profile.ProfileFragment"
+        android:label="fragment_profile"
+        tools:layout="@layout/fragment_profile">
+        <action
+            android:id="@+id/action_profileFragment_to_editProfileFragment"
+            app:destination="@id/editProfileFragment"
+            app:enterAnim="@animator/slide_in_right"
+            app:exitAnim="@animator/slide_out_left"
+            app:popEnterAnim="@animator/slide_in_left"
+            app:popExitAnim="@animator/slide_out_right" />
+        <action
+            android:id="@+id/action_profileFragment_to_createPostFragment"
+            app:destination="@id/createPostFragment"
+            app:enterAnim="@animator/slide_in_right"
+            app:exitAnim="@animator/slide_out_left"
+            app:popEnterAnim="@animator/slide_in_left"
+            app:popExitAnim="@animator/slide_out_right" />
+        <action
+            android:id="@+id/action_ProfileFragment_to_PostDetailFragment"
+            app:destination="@id/postDetailFragment"
+            app:enterAnim="@animator/slide_in_right"
+            app:exitAnim="@animator/slide_out_left"
+            app:popEnterAnim="@animator/slide_in_left"
+            app:popExitAnim="@animator/slide_out_right" />
+    </fragment>
+
+    <!-- detail plant -->
+    <fragment
+        android:id="@+id/plantDetailFragment"
+        android:name="com.example.ensiplant.ui.ensiklopedia.PlantDetailFragment"
+        android:label="fragment_plant_detail"
+        tools:layout="@layout/fragment_plant_detail">
+        <argument
+            android:name="plant"
+            app:argType="com.example.ensiplant.data.model.Plant" />
+    </fragment>
+
+    <!-- edit profile -->
+    <fragment
+        android:id="@+id/editProfileFragment"
+        android:name="com.example.ensiplant.ui.profile.EditProfileFragment"
+        android:label="fragment_edit_profile"
+        tools:layout="@layout/fragment_edit_profile" />
+
+    <!-- create post -->
+    <fragment
+        android:id="@+id/createPostFragment"
+        android:name="com.example.ensiplant.ui.forum.CreatePostFragment"
+        android:label="fragment_create_post"
+        tools:layout="@layout/fragment_create_post" />
+
+    <!-- post detail -->
+    <fragment
+        android:id="@+id/postDetailFragment"
+        android:name="com.example.ensiplant.ui.forum.PostDetailFragment"
+        android:label="fragment_post_detail"
+        tools:layout="@layout/fragment_post_detail" >
+        <argument
+            android:name="postId"
+            app:argType="string" />
+
+        <argument
+            android:name="openKeyboard"
+            app:argType="boolean"
+            android:defaultValue="false" />
+    </fragment>
+
+</navigation>

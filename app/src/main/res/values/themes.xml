@@ -1,9 +1,38 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
     <style name="Base.Theme.Ensiplant" parent="Theme.Material3.DayNight.NoActionBar">
-        <!-- Customize your light theme here. -->
-        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+        <item name="android:statusBarColor">#A0C878</item>
+        <item name="android:windowLightStatusBar">false</item>
+        <item name="android:navigationBarColor">#A0C878</item>
     </style>
 
     <style name="Theme.Ensiplant" parent="Base.Theme.Ensiplant" />
+
+    <!-- Rounded Card -->
+    <style name="ShapeAppearance.App.Card.TopRounded" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSizeTopRight">31dp</item>
+        <item name="cornerSizeTopLeft">31dp</item>
+        <item name="cornerSizeBottomRight">0dp</item>
+        <item name="cornerSizeBottomLeft">0dp</item>
+    </style>
+
+    <!-- Rounded Image (Item Plant) -->
+    <style name="ShapeAppearance.App.Image.Rounded" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">12dp</item>
+    </style>
+
+    <!-- Circle Profile Image -->
+    <style name="ShapeAppearance.App.CircleImageView" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">50%</item>
+    </style>
+
+    <!-- Toolbar Title Style -->
+    <style name="Toolbar.TitleText" parent="TextAppearance.MaterialComponents.Headline6">
+        <item name="android:fontFamily">@font/poppins_bold</item>
+        <item name="android:textColor">#A0C878</item>
+        <item name="android:textSize">24sp</item>
+    </style>
 </resources>

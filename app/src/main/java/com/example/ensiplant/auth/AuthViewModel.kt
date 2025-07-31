@@ -1,4 +1,4 @@
-package com.example.ensiplant
+package com.example.ensiplant.auth
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -22,14 +22,4 @@ class AuthViewModel(private val repository: AuthRepository) : ViewModel() {
         }
     }
 
-    fun signInWithGoogle(token: String) {
-        repository.googleSignInWithFirebase(token) {
-            isAuthenticated.postValue(it)
-        }
-    }
-
-    fun logout() {
-        repository.logout()
-        isAuthenticated.postValue(false)
-    }
 }

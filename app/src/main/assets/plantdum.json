@@ -1,22 +1,85 @@
 [
   {
     "id": "p01",
-    "nama": "Calathea 'Zebra Plant'",
-    "foto": "https://drive.google.com/file/d/1BUy0zG88JCfDQ2uEs9u0jNj_xdnQwzlZ/view?usp=drive_link",
+    "nama": "Lidah Buaya",
+    "foto": "https://drive.google.com/uc?export=view&id=14Z_pEf0IrJj98oAv_az3tumwHeBipTrx",
+    "latin": "Aloe vera",
+    "deskripsi": "Lidah buaya adalah tanaman sukulen yang memiliki banyak manfaat, terutama dalam bidang kesehatan dan kecantikan. Gel dari daunnya sering digunakan untuk menyembuhkan luka bakar, melembapkan kulit, hingga merawat rambut secara alami. Selain itu, tanaman ini juga dikenal dapat membantu mengatasi jerawat, iritasi kulit, dan mempercepat penyembuhan luka. Lidah buaya sangat mudah ditanam dan tumbuh baik di tempat yang cukup sinar matahari dengan penyiraman minimal."
+  },
+  {
+    "id": "p02",
+    "nama": "Kaktus",
+    "foto": "https://drive.google.com/uc?export=view&id=1q-8KVXzWA-naoZvKKwkPqH2nVpvXJrHB",
+    "latin": "Cactaceae",
+    "deskripsi": "Kaktus merupakan tanaman berduri yang mampu bertahan hidup di lingkungan kering seperti gurun. Ia memiliki kemampuan menyimpan air dalam jumlah besar di batangnya, membuatnya sangat tahan terhadap kekeringan. Kaktus juga populer sebagai tanaman hias karena bentuknya yang unik dan perawatannya yang mudah. Beberapa jenis kaktus bahkan dapat berbunga dengan warna mencolok yang indah, memberikan sentuhan eksotis pada interior maupun taman."
+  },
+  {
+    "id": "p03",
+    "nama": "Sirih Gading",
+    "foto": "https://drive.google.com/uc?export=view&id=1N9GBw3ci7q_r3q3hpZSfHA0npc4zfAPi",
+    "latin": "Epipremnum aureum",
+    "deskripsi": "Sirih gading adalah tanaman hias menjuntai yang sangat populer karena mudah dirawat dan cepat tumbuh. Tanaman ini juga dikenal memiliki kemampuan menyaring udara, menjadikannya pilihan ideal untuk tanaman dalam ruangan. Dengan daun berbentuk hati berwarna hijau bercorak kuning atau putih, sirih gading memberikan kesan segar dan alami pada dekorasi rumah. Ia juga dapat ditanam dalam air atau tanah, serta tumbuh baik di tempat teduh maupun terang."
+  },
+  {
+    "id": "p04",
+    "nama": "Lidah Mertua",
+    "foto": "https://drive.google.com/uc?export=view&id=1QCARSV33FroN5ZRz8f-WQe2H1fKT4LdT",
+    "latin": "Sansevieria trifasciata",
+    "deskripsi": "Lidah mertua memiliki daun keras yang tumbuh tegak dan berbentuk runcing, sangat cocok sebagai tanaman hias indoor. Selain tampilannya yang unik, tanaman ini juga dikenal mampu menyerap racun dari udara dan menghasilkan oksigen di malam hari. Hal ini membuat lidah mertua sangat ideal untuk ditempatkan di kamar tidur. Tanaman ini juga dikenal sangat tahan banting, tidak membutuhkan banyak air, dan tetap tumbuh subur meskipun jarang dirawat."
+  },
+  {
+    "id": "p05",
+    "nama": "Puring",
+    "foto": "https://drive.google.com/uc?export=view&id=1cpL5e-wpqIW46g4rEvXthIF7PnxDwCBA",
+    "latin": "Codiaeum variegatum",
+    "deskripsi": "Puring adalah tanaman hias yang mencolok dengan daun beraneka warna seperti merah, kuning, dan hijau. Warna-warna cerah dan bentuk daunnya yang unik menjadikannya populer sebagai penghias taman tropis atau pekarangan rumah. Selain daya tarik visualnya, puring juga memiliki nilai simbolis dalam budaya tertentu sebagai penolak bala. Ia membutuhkan sinar matahari yang cukup agar warna daunnya tetap cerah, serta tanah yang lembap dan tidak tergenang."
+  },
+  {
+    "id": "p06",
+    "nama": "Janda Bolong",
+    "foto": "https://drive.google.com/uc?export=view&id=1ncc2wDoBGHKnrPpVNPBY3jraRfacG5sh",
+    "latin": "Monstera adansonii",
+    "deskripsi": "Janda bolong dikenal dengan bentuk daunnya yang berlubang alami dan estetis. Tanaman ini sedang naik daun di kalangan pecinta tanaman hias karena tampilannya yang eksotis dan kemampuannya tumbuh baik di dalam ruangan. Lubang-lubang pada daunnya dipercaya sebagai adaptasi alami agar angin dapat melewati tanaman dengan mudah di habitat aslinya. Ia tumbuh merambat dan membutuhkan penyangga seperti tiang lumut atau gantungan agar bentuknya tetap indah dan rapi."
+  },
+  {
+    "id": "p07",
+    "nama": "Bunga Kamboja",
+    "foto": "https://drive.google.com/uc?export=view&id=12vwvpCww8DVy40kV2xyA7iXjzsJD34L0",
+    "latin": "Plumeria",
+    "deskripsi": "Bunga kamboja adalah tanaman tropis yang menghasilkan bunga harum berwarna cerah seperti putih, merah muda, dan kuning. Selain sering dijumpai di tempat ibadah, tanaman ini juga digunakan dalam tradisi dan upacara adat di berbagai daerah. Tanaman ini mudah tumbuh di daerah panas dan kering, serta tahan terhadap kekeringan. Bunga kamboja juga sering digunakan sebagai bahan parfum alami dan dipercaya memiliki nilai spiritual serta simbol kesucian."
+  },
+  {
+    "id": "p08",
+    "nama": "Keladi",
+    "foto": "https://drive.google.com/uc?export=view&id=16Y6C1PljxtgbbCcjP7OTAnbipMQe3i-R",
+    "latin": "Caladium",
+    "deskripsi": "Keladi merupakan tanaman hias dengan daun berwarna-warni dan corak unik yang menarik perhatian. Tanaman ini sering dijadikan penghias taman maupun pot indoor karena keindahan bentuk serta kombinasi warna daunnya yang mencolok. Keladi menyukai tempat teduh dan lembap, serta tumbuh baik di tanah yang subur. Dengan perawatan yang tepat, keladi dapat memberikan tampilan yang dramatis dan artistik di berbagai sudut rumah atau taman."
+  },
+  {
+    "id": "p09",
+    "nama": "Paku Sarang Burung",
+    "foto": "https://drive.google.com/uc?export=view&id=1xIw--Ivio0TxDzpm48ngnNT5owig0HAY",
+    "latin": "Asplenium nidus",
+    "deskripsi": "Paku sarang burung memiliki daun lebar dan melengkung, membentuk seperti mangkuk atau sarang. Tanaman ini tumbuh baik di tempat teduh dan lembap, menjadikannya pilihan populer sebagai tanaman hias di dalam rumah atau di area lembap. Daunnya yang hijau mengilap memberikan kesan tropis yang kuat, dan mampu menyerap polutan di udara. Tanaman ini juga mudah beradaptasi dan menjadi favorit karena bentuknya yang unik dan tidak memerlukan perawatan intensif."
+  },
+  {
+    "id": "p10",
+    "nama": "Kemangi",
+    "foto": "https://drive.google.com/uc?export=view&id=1g3mFC2Pcou6l4_dKskKue_2nLsPZ1kfu",
+    "latin": "Ocimum basilicum",
+    "deskripsi": "Kemangi adalah tanaman herbal yang banyak digunakan dalam masakan Asia Tenggara karena aromanya yang khas. Selain sebagai pelengkap makanan, daun kemangi juga memiliki khasiat sebagai antioksidan dan membantu pencernaan. Tanaman ini mudah tumbuh di iklim tropis dan bisa ditanam di pot maupun langsung di tanah. Kemangi juga dipercaya memiliki sifat antiradang, antibakteri, serta mampu mengusir nyamuk karena aromanya yang kuat dan menyegarkan."
+  },
+  {
+    "id": "p11",
+    "nama": "Tanaman Zebra",
+    "foto": "https://drive.google.com/uc?export=view&id=1BUy0zG88JCfDQ2uEs9u0jNj_xdnQwzlZ",
     "latin": "Calathea zebrina",
     "deskripsi": "Calathea zebrina, yang dikenal luas sebagai 'Zebra Plant', adalah spesies tanaman hias herba menahun dari famili Marantaceae. Berasal dari hutan hujan tropis di tenggara Brasil, tanaman ini dihargai karena dedaunannya yang spektakuler. Daunnya yang beludru, berbentuk lonjong, menampilkan pola garis-garis hijau tua yang kontras dengan latar belakang hijau limau pucat, menyerupai pola pada seekor zebra. Bagian bawah daun berwarna ungu tua yang mencolok. Sebagai anggota 'tanaman doa', Calathea zebrina menunjukkan gerakan nyctinastic, di mana daunnya terlipat ke atas pada malam hari dan terbuka kembali di pagi hari. Di habitat aslinya, ia tumbuh di bawah kanopi hutan yang teduh, sehingga ia lebih menyukai cahaya terang yang tidak langsung, kelembapan tinggi, dan tanah yang subur serta dijaga tetap lembap tetapi tidak tergenang air."
   },
   {
-    "id": "p02",
-    "nama": "Monstera Deliciosa",
-    "foto": "https://drive.google.com/file/d/1FOYFyBLN5LyxVLDkeqdnNAk2H-R2M5Hd/view?usp=drive_link",
-    "latin": "Monstera deliciosa",
-    "deskripsi": "Monstera deliciosa, atau yang sering disebut 'Swiss Cheese Plant', adalah spesies tanaman merambat tropis dari famili Araceae, yang berasal dari hutan hujan di Meksiko selatan hingga Panama. Tanaman ini sangat ikonik karena daunnya yang besar, mengkilap, dan berbentuk hati yang mengembangkan lubang-lubang khas atau fenestrasi seiring bertambahnya usia. Fenestrasi ini diduga merupakan adaptasi untuk memaksimalkan penangkapan cahaya matahari di lantai hutan yang redup dan untuk menahan angin kencang. Di alam liar, ia memanjat pohon menggunakan akar udara (aerial roots) untuk mencapai ketinggian hingga 20 meter. Selain sebagai tanaman hias yang sangat populer, Monstera deliciosa juga menghasilkan buah yang dapat dimakan, yang konon rasanya seperti kombinasi nanas dan pisang, dari sinilah nama 'deliciosa' berasal. Namun, buahnya harus matang sempurna karena buah mentah mengandung asam oksalat yang dapat menyebabkan iritasi parah."
-  },
-  {
-    "id": "p03",
+    "id": "p12",
     "nama": "Jagung",
-    "foto": "https://drive.google.com/file/d/1cjRIZ3Iz_VwGZfd9z6cGa6GEyzDehZGo/view?usp=drive_linkhttps://example.com/jagung.jpg",
+    "foto": "https://drive.google.com/uc?export=view&id=1cjRIZ3Iz_VwGZfd9z6cGa6GEyzDehZGo",
     "latin": "Zea mays",
     "deskripsi": "Jagung (Zea mays) adalah tanaman biji-bijian sereal tinggi yang pertama kali didomestikasi oleh masyarakat adat di Meksiko selatan sekitar 10.000 tahun yang lalu dari rumput liar bernama teosinte. Secara botani, jagung adalah sejenis rumput dalam famili Poaceae dan merupakan salah satu tanaman pangan paling vital di dunia, bersama gandum dan padi. Setiap bagian tanaman memiliki fungsi; bijinya yang kaya akan karbohidrat menjadi sumber makanan pokok bagi manusia dan pakan ternak. Batang dan daunnya digunakan sebagai silase, sementara tongkolnya dapat diolah menjadi berbagai produk industri. Jagung juga merupakan sumber utama untuk produksi etanol (biofuel), sirup jagung fruktosa tinggi, dan tepung maizena. Penyerbukannya terjadi melalui angin, di mana serbuk sari dari bunga jantan (tassel) jatuh ke benang sari bunga betina (silk) pada setiap tongkol. Keragaman varietasnya sangat luas, mulai dari jagung manis yang biasa dikonsumsi hingga jagung flint yang keras untuk digiling menjadi tepung."
   }

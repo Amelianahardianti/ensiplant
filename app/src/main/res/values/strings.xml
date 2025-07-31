@@ -1,3 +1,47 @@
 <resources>
     <string name="app_name">ensiplant</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+
+    <string name="default_web_client_id">849667863089-iku13uh97i0euig4fohihqv8i18g16ke.apps.googleusercontent.com</string>
+
+    <string name="ensiplant">EnsiPlant</string>
+    <string name="login">Login</string>
+    <string name="enter_password">Enter Password</string>
+    <string name="you_gmail_com">you@gmail.com</string>
+    <string name="don_t_have_an_account_sign_up">Don\'t have an account? Sign Up</string>
+    <string name="don_t_have_an_account">Don\'t have an account?   </string>
+    <string name="sign_up">Sign Up</string>
+    <string name="profile">Profile</string>
+    <string name="forum">Forum</string>
+    <string name="ensiklopedia">Ensiklopedia</string>
+    <string name="register">Register</string>
+    <string name="username">Username</string>
+    <string name="enter_email">Enter Email</string>
+    <string name="already_have_an_account">Already have an account?</string>
+    <string name="confirm_password">Confirm Password</string>
+    <string name="login_with_google">Login with Google</string>
+    <string name="or">Or</string>
+    <string name="password">Password</string>
+    <string name="remember_me">Remember me</string>
+    <string name="forgot_password">Forgot Password?</string>
+    <string name="plant_ensiklopedia">Plant Ensiklopedia</string>
+    <string name="search">Search</string>
+    <string name="ini_fragment_buat_forum">INI FRAGMENT BUAT FORUM</string>
+    <string name="ini_fragment_buat_profile">INI FRAGMENT BUAT PROFILE</string>
+    <string name="kirim_komentar">buat kirim komentar</string>
+
+
+    <string name="posted">Posted</string>
+    <string name="update">Update</string>
+    <string name="email">Email</string>
+    <string name="city">City</string>
+    <string name="make_a_post">Make a post</string>
+    <string name="write_about_your_plant">Write about your plant...</string>
+    <string name="post">Post</string>
+    <string name="logout">Logout</string>
+    <string name="reply">reply</string>
+    <string name="tambahkan_komentar">tambahkan_komentar</string>
+    <string name="add_image_here">Add Image Here</string>
 </resources>
